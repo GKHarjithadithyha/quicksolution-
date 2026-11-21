@@ -187,7 +187,7 @@ export const BookingFormPage: React.FC = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full h-12 bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-60 text-white font-semibold text-base rounded-xl transition-colors cursor-pointer"
+        className="w-full qs-btn-primary text-base"
       >
         {isSubmitting ? 'Confirming Booking...' : 'Confirm Booking'}
       </button>
@@ -524,7 +524,7 @@ export const BookingFormPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="min-h-[48px] px-6 bg-[#16A34A] hover:bg-[#15803D] active:scale-[0.98] disabled:opacity-60 text-white font-semibold text-sm rounded-xl transition-all cursor-pointer"
+            className="qs-btn-primary px-6 text-sm"
           >
             {isSubmitting ? 'Confirming...' : 'Confirm Booking'}
           </button>

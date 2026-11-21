@@ -20,7 +20,7 @@ export const EmptyState: React.FC<{
         <div className="pt-2">
           <Link
             to={actionTo}
-            className="inline-flex items-center justify-center h-11 px-5 bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-semibold rounded-xl transition-colors"
+            className="inline-flex items-center justify-center qs-btn-primary px-5 text-sm"
           >
             {actionLabel}
           </Link>
@@ -31,7 +31,7 @@ export const EmptyState: React.FC<{
           <button
             type="button"
             onClick={onAction}
-            className="inline-flex items-center justify-center h-11 px-5 bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-semibold rounded-xl transition-colors cursor-pointer"
+            className="inline-flex items-center justify-center qs-btn-primary px-5 text-sm"
           >
             {actionLabel}
           </button>

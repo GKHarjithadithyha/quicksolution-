@@ -5,38 +5,38 @@ export const BookingStatusBadge: React.FC<{ status: BookingStatus }> = ({ status
   const configs: Record<BookingStatus, { label: string; classes: string }> = {
     pending: {
       label: 'Awaiting confirmation',
-      classes: 'bg-[#F2A65A]/15 text-[#9A5B13] border-[#F2A65A]/40'
+      classes: 'bg-[#FEF3C7] text-[#9A6700] border-[#F59E0B]/30'
     },
     assigned: {
       label: 'Partner assigned',
-      classes: 'bg-[#142D4E]/10 text-[#142D4E] border-[#142D4E]/20'
+      classes: 'bg-[#EEF3EC] text-[#172B4D] border-[#DDE3E8]'
     },
     accepted: {
       label: 'Partner accepted',
-      classes: 'bg-[#142D4E]/10 text-[#142D4E] border-[#142D4E]/20'
+      classes: 'bg-[#EEF3EC] text-[#172B4D] border-[#DDE3E8]'
     },
     rejected: {
       label: 'Reassignment required',
-      classes: 'bg-[#D94B4B]/10 text-[#D94B4B] border-[#D94B4B]/30'
+      classes: 'bg-[#FEF2F2] text-[#B42318] border-[#B42318]/25'
     },
     in_progress: {
       label: 'Service in progress',
-      classes: 'bg-[#142D4E] text-white border-[#142D4E]'
+      classes: 'bg-[#172B4D] text-[#B9FF66] border-[#172B4D]'
     },
     completed: {
       label: 'Completed',
-      classes: 'bg-[#20A779]/15 text-[#147352] border-[#20A779]/30'
+      classes: 'bg-[#ECFDF3] text-[#16794B] border-[#16794B]/25'
     },
     cancelled: {
       label: 'Cancelled',
-      classes: 'bg-[#737D89]/10 text-[#737D89] border-[#E8EAED]'
+      classes: 'bg-[#F3F4F6] text-[#475467] border-[#DDE3E8]'
     }
   };
 
   const config = configs[status] || configs.pending;
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border ${config.classes}`}>
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold border ${config.classes}`}>
       {config.label}
     </span>
   );
@@ -46,26 +46,26 @@ export const PaymentStatusBadge: React.FC<{ status: PaymentStatus }> = ({ status
   const configs: Record<PaymentStatus, { label: string; classes: string }> = {
     unpaid: {
       label: 'Payment pending',
-      classes: 'bg-[#F2A65A]/15 text-[#9A5B13] border-[#F2A65A]/40'
+      classes: 'bg-[#FEF3C7] text-[#9A6700] border-[#F59E0B]/30'
     },
     submitted: {
       label: 'Pending verification',
-      classes: 'bg-[#F2A65A]/15 text-[#9A5B13] border-[#F2A65A]/40'
+      classes: 'bg-[#FEF3C7] text-[#9A6700] border-[#F59E0B]/30'
     },
     verified: {
       label: 'Payment verified',
-      classes: 'bg-[#20A779]/15 text-[#147352] border-[#20A779]/30'
+      classes: 'bg-[#ECFDF3] text-[#16794B] border-[#16794B]/25'
     },
     rejected: {
       label: 'Payment rejected',
-      classes: 'bg-[#D94B4B]/10 text-[#D94B4B] border-[#D94B4B]/30'
+      classes: 'bg-[#FEF2F2] text-[#B42318] border-[#B42318]/25'
     }
   };
 
   const config = configs[status] || configs.unpaid;
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border ${config.classes}`}>
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold border ${config.classes}`}>
       {config.label}
     </span>
   );

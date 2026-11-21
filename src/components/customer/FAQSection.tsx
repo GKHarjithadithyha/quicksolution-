@@ -34,24 +34,24 @@ export const FAQSection: React.FC = () => {
         return (
           <div
             key={item.q}
-            className="bg-white border border-[#E5E7EB] rounded-xl overflow-hidden"
+            className="bg-white border border-[#DDE3E8] rounded-2xl overflow-hidden"
           >
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : idx)}
-              className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#F9FAFB] transition-colors"
+              className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#F7F9F4] transition-colors"
             >
-              <span className="text-sm sm:text-base font-medium text-[#1E3A8A]">
+              <span className="text-sm sm:text-base font-semibold text-[#172B4D]">
                 {item.q}
               </span>
               <ChevronDown
-                className={`w-5 h-5 text-[#6B7280] shrink-0 transition-transform ${
-                  isOpen ? 'rotate-180 text-[#16A34A]' : ''
+                className={`w-5 h-5 text-[#667085] shrink-0 transition-transform ${
+                  isOpen ? 'rotate-180 text-[#172B4D]' : ''
                 }`}
               />
             </button>
             {isOpen && (
-              <div className="px-5 pb-4 text-sm text-[#6B7280] leading-relaxed border-t border-[#E5E7EB] pt-3">
+              <div className="px-5 pb-4 text-sm text-[#475467] leading-relaxed border-t border-[#DDE3E8] pt-3">
                 {item.a}
               </div>
             )}

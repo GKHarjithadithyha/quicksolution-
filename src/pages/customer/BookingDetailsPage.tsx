@@ -94,7 +94,7 @@ export const BookingDetailsPage: React.FC = () => {
           <div className="space-y-3 pt-1">
             <Link
               to={`/payment/${booking.id}`}
-              className="w-full h-12 bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold text-base rounded-xl flex items-center justify-center transition-colors"
+              className="w-full qs-btn-primary text-base flex items-center justify-center"
             >
               Continue to Payment
             </Link>
@@ -165,7 +165,7 @@ export const BookingDetailsPage: React.FC = () => {
           </div>
           <Link
             to={`/payment/${booking.id}`}
-            className="h-11 px-5 bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-semibold rounded-xl inline-flex items-center justify-center shrink-0 transition-colors"
+            className="qs-btn-primary px-5 text-sm inline-flex items-center justify-center shrink-0"
           >
             Continue to Payment
           </Link>

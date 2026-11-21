@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../features/auth/AuthContext';
+import { QuickSolutionLogo } from '../../components/common/QuickSolutionLogo';
 import { toast } from 'sonner';
 
 export const LoginPage: React.FC = () => {
@@ -29,11 +30,9 @@ export const LoginPage: React.FC = () => {
     <div className="max-w-md mx-auto py-6 sm:py-10">
       <div className="bg-white border border-[#E8EAED] rounded-2xl p-6 sm:p-8 space-y-6">
         <div className="space-y-2 text-center">
-          <div className="w-11 h-11 rounded-xl bg-[#16A34A] text-white font-bold text-lg flex items-center justify-center mx-auto">
-            QS
-          </div>
-          <h1 className="text-2xl font-bold text-[#1E3A8A]">Welcome back</h1>
-          <p className="text-sm text-[#737D89]">
+          <QuickSolutionLogo variant="stacked" theme="light" showTagline size="md" />
+          <h1 className="text-2xl font-bold text-[#172B4D] pt-2">Welcome back</h1>
+          <p className="text-sm text-[#475467]">
             Sign in to schedule services and track your bookings
           </p>
         </div>
@@ -86,7 +85,7 @@ export const LoginPage: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full h-12 bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold text-base rounded-xl transition-colors cursor-pointer"
+            className="w-full qs-btn-primary text-base"
           >
             Login
           </button>

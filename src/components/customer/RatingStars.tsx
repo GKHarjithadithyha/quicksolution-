@@ -20,7 +20,7 @@ export const RatingStars: React.FC<RatingStarsProps> = ({
   if (!hasRealRating) {
     if (!showNewBadge) return null;
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-[#F2FAF5] border border-[#16A34A]/20 text-[11px] font-medium text-[#15803D]">
+      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-[#EEF3EC] border border-[#DDE3E8] text-[11px] font-semibold text-[#172B4D]">
         New service
       </span>
     );

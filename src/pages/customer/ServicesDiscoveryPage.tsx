@@ -70,16 +70,16 @@ export const ServicesDiscoveryPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-[28px] sm:text-[32px] font-bold text-[#1E3A8A] tracking-tight">
+        <h1 className="text-[28px] sm:text-[32px] font-bold text-[#172B4D] tracking-tight">
           Explore Services
         </h1>
-        <p className="text-sm text-[#6B7280] mt-1">
+        <p className="text-sm text-[#475467] mt-1">
           Browse, filter, and compare fixed-price home services
         </p>
       </div>
 
       {/* Search, Quick Mobile Category Pills & Filter Controls */}
-      <div className="glass-card rounded-2xl p-4 sm:p-5 space-y-4">
+      <div className="bg-white border border-[#DDE3E8] rounded-2xl p-4 sm:p-5 space-y-4">
         <SearchBar
           value={searchTerm}
           onChange={setSearchTerm}
@@ -91,10 +91,10 @@ export const ServicesDiscoveryPage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleCategoryChange('')}
-            className={`min-h-[38px] px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+            className={`min-h-[38px] px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors cursor-pointer ${
               selectedCategory === ''
-                ? 'bg-[#16A34A] text-white'
-                : 'bg-white border border-[#E5E7EB] text-[#1E3A8A] hover:border-[#16A34A]'
+                ? 'bg-[#B9FF66] text-[#172B4D]'
+                : 'bg-[#EEF3EC] border border-[#DDE3E8] text-[#172B4D] hover:border-[#172B4D]'
             }`}
           >
             All
@@ -104,10 +104,10 @@ export const ServicesDiscoveryPage: React.FC = () => {
               key={cat.id}
               type="button"
               onClick={() => handleCategoryChange(cat.id)}
-              className={`min-h-[38px] px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+              className={`min-h-[38px] px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors cursor-pointer ${
                 selectedCategory === cat.id
-                  ? 'bg-[#16A34A] text-white'
-                  : 'bg-white border border-[#E5E7EB] text-[#1E3A8A] hover:border-[#16A34A]'
+                  ? 'bg-[#B9FF66] text-[#172B4D]'
+                  : 'bg-[#EEF3EC] border border-[#DDE3E8] text-[#172B4D] hover:border-[#172B4D]'
               }`}
             >
               {cat.name}

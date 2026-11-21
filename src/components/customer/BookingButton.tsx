@@ -28,7 +28,7 @@ export const BookingButton: React.FC<BookingButtonProps> = ({
       ? 'min-h-[44px] px-4 text-sm'
       : 'min-h-[48px] px-5 text-sm';
 
-  const baseClasses = `inline-flex items-center justify-center gap-1.5 font-semibold rounded-xl bg-[#16A34A] hover:bg-[#15803D] active:scale-[0.98] active:bg-[#15803D] disabled:opacity-60 text-white transition-all cursor-pointer ${sizeClasses} ${
+  const baseClasses = `qs-btn-primary inline-flex items-center justify-center gap-1.5 ${sizeClasses} ${
     fullWidth ? 'w-full' : ''
   }`;
 

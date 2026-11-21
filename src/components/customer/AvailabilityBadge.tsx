@@ -11,16 +11,16 @@ export const AvailabilityBadge: React.FC<AvailabilityBadgeProps> = ({
 }) => {
   if (!isAvailable) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B7280]">
-        <span className="w-2 h-2 rounded-full bg-gray-400" />
+      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#667085]">
+        <span className="w-2 h-2 rounded-full bg-[#667085]" />
         {label || 'Currently unavailable'}
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#15803D]">
-      <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#16794B]">
+      <span className="w-2 h-2 rounded-full bg-[#16794B]" />
       {label || 'Available Now'}
     </span>
   );

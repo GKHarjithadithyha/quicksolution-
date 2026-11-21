@@ -55,7 +55,7 @@ export const TransactionReferenceForm: React.FC<TransactionReferenceFormProps> =
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full h-12 bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-60 text-white font-semibold text-sm sm:text-base rounded-xl transition-colors cursor-pointer"
+        className="w-full qs-btn-primary text-sm sm:text-base"
       >
         {isSubmitting ? 'Submitting...' : 'Submit Payment Details'}
       </button>
