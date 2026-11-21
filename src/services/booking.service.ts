@@ -22,7 +22,10 @@ export const bookingService = {
     serviceName: string;
     price: number;
     scheduledAt: string;
+    scheduledDate?: string;
+    scheduledSlot?: string;
     address: string;
+    street?: string;
     landmark?: string;
     city: string;
     pincode: string;
@@ -44,7 +47,10 @@ export const bookingService = {
       service_name: params.serviceName,
       service_price_snapshot: params.price,
       scheduled_at: params.scheduledAt,
+      scheduled_date: params.scheduledDate,
+      scheduled_slot: params.scheduledSlot,
       address: params.address,
+      street: params.street,
       landmark: params.landmark,
       city: params.city,
       pincode: params.pincode,
@@ -66,7 +72,7 @@ export const bookingService = {
           changed_by: params.customerId,
           changed_by_name: params.customerName,
           new_status: 'pending',
-          note: 'Booking requested by customer',
+          note: 'Booking received and awaiting confirmation',
           created_at: new Date().toISOString()
         }
       ],
@@ -80,10 +86,10 @@ export const bookingService = {
   },
 
   updateStatus(
-    bookingId: string, 
-    newStatus: BookingStatus, 
-    changedBy: string, 
-    changedByName: string, 
+    bookingId: string,
+    newStatus: BookingStatus,
+    changedBy: string,
+    changedByName: string,
     note?: string
   ): Booking | undefined {
     const list = store.getBookings();

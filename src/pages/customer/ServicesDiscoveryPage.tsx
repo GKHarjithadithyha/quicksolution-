@@ -1,143 +1,218 @@
-import React, { useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { serviceService } from '../../services/service.service';
-import { formatCurrency } from '../../lib/utils';
-import { Search, Filter, Star, Clock, ArrowRight } from 'lucide-react';
+import { SearchBar } from '../../components/customer/SearchBar';
+import { ServiceCard } from '../../components/customer/ServiceCard';
+import { EmptyState } from '../../components/customer/StateViews';
+import { SlidersHorizontal } from 'lucide-react';
+
+type PriceRange = 'all' | 'under-500' | '500-1000' | 'above-1000';
+type SortOption = 'recommended' | 'price-asc' | 'price-desc';
 
 export const ServicesDiscoveryPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoryParam = searchParams.get('category') || '';
-  const searchParam = searchParams.get('search') || '';
+  const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || '');
+  const [searchTerm, setSearchTerm] = useState<string>(searchParams.get('search') || '');
+  const [priceRange, setPriceRange] = useState<PriceRange>('all');
+  const [sortBy, setSortBy] = useState<SortOption>('recommended');
 
-  const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam);
-  const [searchTerm, setSearchTerm] = useState<string>(searchParam);
+  useEffect(() => {
+    setSelectedCategory(searchParams.get('category') || '');
+    setSearchTerm(searchParams.get('search') || '');
+  }, [searchParams]);
 
   const categories = serviceService.getCategories();
-  const services = serviceService.getServices(
-    selectedCategory || undefined,
-    searchTerm || undefined
-  );
+  const allServices = serviceService.getServices();
 
-  const handleCategoryClick = (catId: string) => {
-    const next = selectedCategory === catId ? '' : catId;
-    setSelectedCategory(next);
-    if (next) {
-      searchParams.set('category', next);
-    } else {
-      searchParams.delete('category');
-    }
-    setSearchParams(searchParams);
+  const handleCategoryChange = (catId: string) => {
+    setSelectedCategory(catId);
+    const next = new URLSearchParams(searchParams);
+    if (catId) next.set('category', catId);
+    else next.delete('category');
+    setSearchParams(next);
   };
+
+  const handleResetFilters = () => {
+    setSelectedCategory('');
+    setSearchTerm('');
+    setPriceRange('all');
+    setSortBy('recommended');
+    setSearchParams(new URLSearchParams());
+  };
+
+  const filteredServices = useMemo(() => {
+    let list = allServices.filter((s) => {
+      if (selectedCategory && s.category_id !== selectedCategory) return false;
+      if (searchTerm.trim()) {
+        const q = searchTerm.toLowerCase();
+        const catName = serviceService.getCategoryById(s.category_id)?.name.toLowerCase() || '';
+        const matches =
+          s.name.toLowerCase().includes(q) ||
+          s.description.toLowerCase().includes(q) ||
+          catName.includes(q);
+        if (!matches) return false;
+      }
+      if (priceRange === 'under-500' && s.price >= 500) return false;
+      if (priceRange === '500-1000' && (s.price < 500 || s.price > 1000)) return false;
+      if (priceRange === 'above-1000' && s.price <= 1000) return false;
+      return true;
+    });
+
+    if (sortBy === 'price-asc') {
+      list = [...list].sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price-desc') {
+      list = [...list].sort((a, b) => b.price - a.price);
+    }
+
+    return list;
+  }, [allServices, selectedCategory, searchTerm, priceRange, sortBy]);
 
   return (
     <div className="space-y-6">
-      {/* Top Filter Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search across all home repair and cleaning services..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
-        </div>
+      <div>
+        <h1 className="text-[28px] sm:text-[32px] font-bold text-[#1E3A8A] tracking-tight">
+          Explore Services
+        </h1>
+        <p className="text-sm text-[#6B7280] mt-1">
+          Browse, filter, and compare fixed-price home services
+        </p>
+      </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+      {/* Search, Quick Mobile Category Pills & Filter Controls */}
+      <div className="glass-card rounded-2xl p-4 sm:p-5 space-y-4">
+        <SearchBar
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder="Search for plumbing, cleaning, AC repair..."
+        />
+
+        {/* Quick 1-Tap Scrollable Category Pills (Thumb-friendly on Mobile) */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5 -mx-1 px-1">
           <button
-            onClick={() => handleCategoryClick('')}
-            className={`px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap transition-all ${
+            type="button"
+            onClick={() => handleCategoryChange('')}
+            className={`min-h-[38px] px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
               selectedCategory === ''
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                ? 'bg-[#16A34A] text-white'
+                : 'bg-white border border-[#E5E7EB] text-[#1E3A8A] hover:border-[#16A34A]'
             }`}
           >
-            All Services ({serviceService.getServices().length})
+            All
           </button>
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => handleCategoryClick(cat.id)}
-              className={`px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap transition-all ${
+              type="button"
+              onClick={() => handleCategoryChange(cat.id)}
+              className={`min-h-[38px] px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 selectedCategory === cat.id
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#16A34A] text-white'
+                  : 'bg-white border border-[#E5E7EB] text-[#1E3A8A] hover:border-[#16A34A]'
               }`}
             >
               {cat.name}
             </button>
           ))}
         </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+          <div>
+            <label htmlFor="category-filter" className="block text-xs font-medium text-[#4B5563] mb-1">
+              Category
+            </label>
+            <select
+              id="category-filter"
+              value={selectedCategory}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="w-full h-11 px-3 bg-white border border-[#E5E7EB] rounded-xl text-sm text-[#1F2937] outline-none focus:border-[#16A34A]"
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="price-filter" className="block text-xs font-medium text-[#4B5563] mb-1">
+              Price Range
+            </label>
+            <select
+              id="price-filter"
+              value={priceRange}
+              onChange={(e) => setPriceRange(e.target.value as PriceRange)}
+              className="w-full h-11 px-3 bg-white border border-[#E5E7EB] rounded-xl text-sm text-[#1F2937] outline-none focus:border-[#16A34A]"
+            >
+              <option value="all">All Prices</option>
+              <option value="under-500">Under ₹500</option>
+              <option value="500-1000">₹500 – ₹1,000</option>
+              <option value="above-1000">Above ₹1,000</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="sort-select" className="block text-xs font-medium text-[#4B5563] mb-1">
+              Sort By
+            </label>
+            <select
+              id="sort-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="w-full h-11 px-3 bg-white border border-[#E5E7EB] rounded-xl text-sm text-[#1F2937] outline-none focus:border-[#16A34A]"
+            >
+              <option value="recommended">Recommended</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      {/* Services Grid */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold text-slate-900">
-            Available Services ({services.length})
-          </h1>
+      {/* Results Header */}
+      <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center gap-2 text-[#6B7280]">
+          <SlidersHorizontal className="w-4 h-4 text-[#16A34A]" />
+          <span>
+            Showing <strong className="text-[#1E3A8A]">{filteredServices.length}</strong>{' '}
+            {filteredServices.length === 1 ? 'service' : 'services'}
+          </span>
         </div>
 
-        {services.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
-            <Filter className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-            <h3 className="text-base font-bold text-slate-700">No services found</h3>
-            <p className="text-xs text-slate-400 mt-1">Try adjusting your filters or search terms</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {services.map((service) => (
-              <div
-                key={service.id}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-all"
-              >
-                <div className="relative h-44 overflow-hidden bg-slate-100">
-                  <img
-                    src={service.image_url}
-                    alt={service.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-md text-xs font-bold text-slate-800 flex items-center gap-1 shadow-sm">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    {service.rating} ({service.reviews_count})
-                  </div>
-                </div>
-
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-base">{service.name}</h3>
-                    <p className="text-xs text-slate-500 line-clamp-2 mt-1">{service.description}</p>
-                    <div className="mt-3 text-xs text-slate-500 flex items-center gap-2">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
-                      <span>{service.duration} mins duration</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                    <div>
-                      <span className="text-xs text-slate-400 block">Upfront Price</span>
-                      <span className="text-lg font-bold text-slate-900">
-                        {formatCurrency(service.price)}
-                      </span>
-                    </div>
-
-                    <Link
-                      to={`/service/${service.id}`}
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1"
-                    >
-                      Book <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        {(selectedCategory || searchTerm || priceRange !== 'all') && (
+          <button
+            type="button"
+            onClick={handleResetFilters}
+            className="text-sm font-semibold text-[#16A34A] hover:underline cursor-pointer"
+          >
+            Clear filters
+          </button>
         )}
       </div>
+
+      {/* 4-Column Desktop Service Grid */}
+      {filteredServices.length === 0 ? (
+        <EmptyState
+          title="No services match your search"
+          description="Try clearing your filters or searching with a different service name or category."
+          actionLabel="Reset Filters"
+          onAction={handleResetFilters}
+        />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {filteredServices.map((service) => {
+            const cat = serviceService.getCategoryById(service.category_id);
+            return (
+              <ServiceCard
+                key={service.id}
+                service={service}
+                categoryName={cat?.name}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

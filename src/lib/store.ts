@@ -1,5 +1,5 @@
-import { INITIAL_CATEGORIES, INITIAL_SERVICES, INITIAL_PARTNERS, INITIAL_USERS, INITIAL_BOOKINGS } from './mock-data';
-import { Booking, PartnerProfile, ServiceCategory, ServiceItem, UserProfile } from '../types';
+import { INITIAL_CATEGORIES, INITIAL_SERVICES, INITIAL_USERS, INITIAL_BOOKINGS, INITIAL_REVIEWS } from './mock-data';
+import { Booking, ServiceCategory, ServiceItem, ServiceReview, UserProfile } from '../types';
 
 class LocalStorageStore {
   private get<T>(key: string, defaultValue: T): T {
@@ -20,47 +20,57 @@ class LocalStorageStore {
   }
 
   getCategories(): ServiceCategory[] {
-    return this.get('hs_categories', INITIAL_CATEGORIES);
-  }
-
-  saveCategories(data: ServiceCategory[]): void {
-    this.set('hs_categories', data);
+    return this.get('hs_categories_v3', INITIAL_CATEGORIES);
   }
 
   getServices(): ServiceItem[] {
-    return this.get('hs_services', INITIAL_SERVICES);
+    return this.get('hs_services_v4', INITIAL_SERVICES);
   }
 
-  saveServices(data: ServiceItem[]): void {
-    this.set('hs_services', data);
+  getReviews(): ServiceReview[] {
+    return this.get('hs_reviews_v3', INITIAL_REVIEWS);
   }
 
-  getPartners(): PartnerProfile[] {
-    return this.get('hs_partners', INITIAL_PARTNERS);
-  }
-
-  savePartners(data: PartnerProfile[]): void {
-    this.set('hs_partners', data);
+  saveReviews(data: ServiceReview[]): void {
+    this.set('hs_reviews_v3', data);
   }
 
   getBookings(): Booking[] {
-    return this.get('hs_bookings', INITIAL_BOOKINGS);
+    return this.get('hs_bookings_v3', INITIAL_BOOKINGS);
   }
 
   saveBookings(data: Booking[]): void {
-    this.set('hs_bookings', data);
+    this.set('hs_bookings_v3', data);
   }
 
   getUsers(): UserProfile[] {
-    return this.get('hs_users', INITIAL_USERS);
+    return this.get('hs_users_v3', INITIAL_USERS);
   }
 
-  getCurrentUser(): UserProfile {
-    return this.get('hs_current_user', INITIAL_USERS[0]); // Defaults to customer
+  saveUsers(data: UserProfile[]): void {
+    this.set('hs_users_v3', data);
   }
 
-  setCurrentUser(user: UserProfile): void {
-    this.set('hs_current_user', user);
+  getCurrentUser(): UserProfile | null {
+    try {
+      const raw = localStorage.getItem('hs_current_user_v3');
+      if (raw === null) return null; // Allow guest browsing by default
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  setCurrentUser(user: UserProfile | null): void {
+    this.set('hs_current_user_v3', user);
+  }
+
+  getLocation(): string {
+    return this.get('hs_customer_location', 'Bengaluru');
+  }
+
+  setLocation(location: string): void {
+    this.set('hs_customer_location', location);
   }
 }
 

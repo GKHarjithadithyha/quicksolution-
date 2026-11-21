@@ -1,34 +1,65 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserProfile, UserRole } from '../../types';
+import React, { createContext, useContext, useState } from 'react';
+import { UserProfile } from '../../types';
 import { authService } from '../../services/auth.service';
+import { store } from '../../lib/store';
 
 interface AuthContextType {
-  user: UserProfile;
-  switchRole: (role: UserRole) => void;
+  user: UserProfile | null;
+  location: string;
+  setLocation: (loc: string) => void;
+  login: (email: string, password: string) => UserProfile;
+  register: (params: { fullName: string; email: string; phone: string }) => UserProfile;
+  updateProfile: (updates: { full_name: string; phone: string }) => UserProfile | null;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile>(authService.getCurrentUser());
+  const [user, setUser] = useState<UserProfile | null>(() => authService.getCurrentUser());
+  const [location, setLocationState] = useState<string>(() => store.getLocation());
 
-  useEffect(() => {
-    setUser(authService.getCurrentUser());
-  }, []);
+  const setLocation = (loc: string) => {
+    const clean = loc.trim() || 'Bengaluru';
+    store.setLocation(clean);
+    setLocationState(clean);
+  };
 
-  const switchRole = (role: UserRole) => {
-    const updated = authService.switchRole(role);
+  const login = (email: string, password: string) => {
+    const loggedIn = authService.login(email, password);
+    setUser(loggedIn);
+    return loggedIn;
+  };
+
+  const register = (params: { fullName: string; email: string; phone: string }) => {
+    const registered = authService.register(params);
+    setUser(registered);
+    return registered;
+  };
+
+  const updateProfile = (updates: { full_name: string; phone: string }) => {
+    const updated = authService.updateProfile(updates);
     setUser(updated);
+    return updated;
   };
 
   const logout = () => {
     authService.logout();
-    setUser(authService.getCurrentUser());
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, switchRole, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        location,
+        setLocation,
+        login,
+        register,
+        updateProfile,
+        logout
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

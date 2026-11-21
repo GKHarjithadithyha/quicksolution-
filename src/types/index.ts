@@ -1,11 +1,9 @@
-export type UserRole = 'customer' | 'partner' | 'admin';
-
 export interface UserProfile {
   id: string;
   email: string;
   full_name: string;
   phone: string;
-  role: UserRole;
+  role: 'customer';
   created_at: string;
 }
 
@@ -19,6 +17,18 @@ export interface ServiceCategory {
   created_at: string;
 }
 
+export type ServiceBadge = 'MOST BOOKED' | 'TOP RATED' | 'TRENDING';
+
+export interface ServiceReview {
+  id: string;
+  service_id: string;
+  customer_id: string;
+  customer_name: string;
+  rating: number; // 1 to 5
+  comment: string;
+  created_at: string;
+}
+
 export interface ServiceItem {
   id: string;
   category_id: string;
@@ -26,26 +36,32 @@ export interface ServiceItem {
   description: string;
   price: number;
   duration: number; // in minutes
-  rating?: number;
-  reviews_count?: number;
   is_active: boolean;
+  is_available?: boolean;
+  badge?: ServiceBadge;
   image_url: string;
+  video_url?: string;
   included: string[];
+  additional_info?: string[];
+  // Computed from real backend records (null/0 until real data exists)
+  average_rating?: number | null;
+  review_count?: number;
+  booking_count?: number;
 }
 
-export type BookingStatus = 
-  | 'pending' 
-  | 'assigned' 
-  | 'accepted' 
-  | 'rejected' 
-  | 'in_progress' 
-  | 'completed' 
+export type BookingStatus =
+  | 'pending'
+  | 'assigned'
+  | 'accepted'
+  | 'rejected'
+  | 'in_progress'
+  | 'completed'
   | 'cancelled';
 
-export type PaymentStatus = 
-  | 'unpaid' 
-  | 'submitted' 
-  | 'verified' 
+export type PaymentStatus =
+  | 'unpaid'
+  | 'submitted'
+  | 'verified'
   | 'rejected';
 
 export interface Booking {
@@ -61,7 +77,10 @@ export interface Booking {
   partner_name?: string;
   partner_phone?: string;
   scheduled_at: string;
+  scheduled_date?: string;
+  scheduled_slot?: string;
   address: string;
+  street?: string;
   landmark?: string;
   city: string;
   pincode: string;
@@ -96,18 +115,4 @@ export interface BookingStatusHistoryItem {
   new_status: BookingStatus;
   note?: string;
   created_at: string;
-}
-
-export interface PartnerProfile {
-  id: string;
-  user_id: string;
-  full_name: string;
-  email: string;
-  phone: string;
-  skills: string[];
-  availability: string;
-  verification_status: 'verified' | 'pending' | 'suspended';
-  is_active: boolean;
-  rating: number;
-  total_jobs: number;
 }

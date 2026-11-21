@@ -1,48 +1,117 @@
-import { ServiceCategory, ServiceItem, PartnerProfile, Booking, UserProfile } from '../types';
+import { ServiceCategory, ServiceItem, Booking, UserProfile, ServiceReview } from '../types';
+
+export const HERO_BACKGROUND_VIDEOS = {
+  cleaning: '/videos/hero-services.mp4',
+  homeCare: '/videos/hero-services.mp4',
+  repair: '/videos/hero-services.mp4'
+};
 
 export const INITIAL_CATEGORIES: ServiceCategory[] = [
   {
-    id: 'cat-1',
-    name: 'AC & Appliance Repair',
-    description: 'Expert servicing, installation, and breakdown maintenance',
-    icon: 'Wrench',
-    image_url: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80',
-    is_active: true,
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 'cat-2',
-    name: 'Electrician & Wiring',
-    description: 'Certified electricians for switches, MCBs, fixtures & rewiring',
+    id: 'cat-electrical',
+    name: 'Electrical',
+    description: 'Switches, MCBs, fan fitting, lighting & wiring repairs',
     icon: 'Zap',
-    image_url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=600&q=80',
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
-    id: 'cat-3',
-    name: 'Plumbing Services',
-    description: 'Leak fixes, pipe fittings, tap repair & sanitary installations',
+    id: 'cat-plumbing',
+    name: 'Plumbing',
+    description: 'Tap repairs, leak fixes, pipe fittings & sanitary work',
     icon: 'Droplets',
     image_url: 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=600&q=80',
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
-    id: 'cat-4',
-    name: 'Deep Cleaning & Sanitization',
-    description: 'Full home, kitchen, sofa, bathroom deep cleaning service',
+    id: 'cat-ac',
+    name: 'AC Services',
+    description: 'Split & window AC servicing, jet wash & gas refill',
+    icon: 'Wind',
+    image_url: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80',
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'cat-cleaning',
+    name: 'Cleaning',
+    description: 'Home, kitchen, bathroom & sofa deep cleaning',
     icon: 'Sparkles',
     image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80',
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
-    id: 'cat-5',
-    name: 'Carpentry & Furniture',
-    description: 'Furniture assembly, lock repair, shelf hanging and polish',
+    id: 'cat-carpentry',
+    name: 'Carpentry',
+    description: 'Furniture repair, door locks, hinges & shelf installation',
     icon: 'Hammer',
     image_url: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=600&q=80',
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'cat-painting',
+    name: 'Painting',
+    description: 'Interior room painting, touch-ups & wall waterproofing',
+    icon: 'Paintbrush',
+    image_url: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=600&q=80',
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'cat-pest',
+    name: 'Pest Control',
+    description: 'Cockroach, termite, ant & general home pest treatment',
+    icon: 'Bug',
+    image_url: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=600&q=80',
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'cat-appliance',
+    name: 'Appliance Repair',
+    description: 'Refrigerator, washing machine, microwave & geyser repair',
+    icon: 'Wrench',
+    image_url: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=600&q=80',
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'cat-civil',
+    name: 'Civil & Maintenance',
+    description: 'Tile grouting, masonry patch-ups & minor civil work',
+    icon: 'HardHat',
+    image_url: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'cat-gardening',
+    name: 'Gardening',
+    description: 'Lawn mowing, balcony garden care & plant maintenance',
+    icon: 'Flower2',
+    image_url: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80',
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'cat-shifting',
+    name: 'House Shifting',
+    description: 'Local home relocation, packing & furniture loading',
+    icon: 'Truck',
+    image_url: 'https://images.unsplash.com/photo-1600518464441-9154a4dea21b?auto=format&fit=crop&w=600&q=80',
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'cat-renovation',
+    name: 'Home Renovation',
+    description: 'Kitchen remodeling, bathroom upgrades & interior work',
+    icon: 'Home',
+    image_url: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=600&q=80',
     is_active: true,
     created_at: new Date().toISOString()
   }
@@ -51,134 +120,261 @@ export const INITIAL_CATEGORIES: ServiceCategory[] = [
 export const INITIAL_SERVICES: ServiceItem[] = [
   {
     id: 'srv-1',
-    category_id: 'cat-1',
-    name: 'AC Master Jet Servicing (Split)',
-    description: 'High-power indoor & outdoor unit foam spray jet wash with 30-day cooling guarantee.',
+    category_id: 'cat-ac',
+    name: 'AC General Service',
+    description: 'Indoor unit cleaning, filter wash, and cooling inspection for split or window AC.',
     price: 599,
     duration: 60,
-    rating: 4.8,
-    reviews_count: 320,
     is_active: true,
-    image_url: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/5691568/5691568-hd_1280_720_25fps.mp4',
     included: [
-      'Indoor evaporator coil deep foam cleaning',
-      'High-pressure water jet washing',
-      'Outdoor condenser unit cleaning',
-      'Gas pressure & current check'
+      'Indoor evaporator coil and filter jet cleaning',
+      'Drain tray and pipe flushing to prevent water leakage',
+      'Outdoor condenser unit water wash',
+      'Cooling airflow and basic gas pressure inspection'
+    ],
+    additional_info: [
+      'Please ensure access to a nearby water tap and power socket.',
+      'Spare parts or refrigerant gas top-up, if required, are not included in this fixed price.',
+      'A ladder may be needed if the indoor unit is mounted above 9 feet.'
     ]
   },
   {
     id: 'srv-2',
-    category_id: 'cat-1',
-    name: 'Refrigerator Deep Checkup & Repair',
-    description: 'Comprehensive diagnosis for single & double door refrigerators with cooling issues.',
-    price: 349,
+    category_id: 'cat-plumbing',
+    name: 'Tap & Mixer Repair',
+    description: 'Repair leaking bathroom or kitchen taps, washers, and spindles.',
+    price: 299,
     duration: 45,
-    rating: 4.7,
-    reviews_count: 142,
     is_active: true,
-    image_url: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=600&q=80',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/8487777/8487777-hd_1280_720_25fps.mp4',
     included: [
-      'Compressor relay & thermostat testing',
-      'Gas leak detection',
-      'Coil & defrost heater inspection'
+      'Inspection and repair of up to 2 leaking taps or mixers',
+      'Washer and cartridge adjustment or tightening',
+      'Teflon tape resealing on threaded joints',
+      'Water pressure and leakage verification after repair'
+    ],
+    additional_info: [
+      'Replacement taps, cartridges, or concealed wall fittings are billed separately if needed.',
+      'Please inform the technician of the main water shut-off valve location.'
     ]
   },
   {
     id: 'srv-3',
-    category_id: 'cat-2',
+    category_id: 'cat-electrical',
     name: 'Ceiling Fan Installation & Repair',
-    description: 'Quick installation, noise elimination, speed regulator fixing or replacement.',
-    price: 199,
+    description: 'Standard ceiling fan installation, capacitor replacement, or regulator fix.',
+    price: 249,
     duration: 30,
-    rating: 4.9,
-    reviews_count: 512,
     is_active: true,
-    image_url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/5691605/5691605-hd_1280_720_25fps.mp4',
     included: [
-      'Installation or demounting of fan',
-      'Capacitor and wiring inspection',
-      'Safety bracket installation'
+      'Installation or replacement of 1 ceiling fan',
+      'Wire connection and safety clamp check',
+      'Speed regulator and capacitor testing',
+      'Post-installation wobble and noise check'
+    ],
+    additional_info: [
+      'Customer should provide the new fan unit or replacement capacitor if required.',
+      'High-ceiling installations above 12 feet may require additional arrangement.'
     ]
   },
   {
     id: 'srv-4',
-    category_id: 'cat-3',
-    name: 'Complete Bathroom Plumbing Check & Tap Repair',
-    description: 'Fix up to 3 leaking taps, flush valve diagnosis, or minor pipe sealing.',
-    price: 299,
-    duration: 45,
-    rating: 4.8,
-    reviews_count: 289,
+    category_id: 'cat-cleaning',
+    name: 'Bathroom Deep Cleaning',
+    description: 'Hard water stain removal, tile scrubbing, and complete bathroom sanitization.',
+    price: 499,
+    duration: 90,
     is_active: true,
-    image_url: 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=600&q=80',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/6195125/6195125-hd_1920_1080_25fps.mp4',
     included: [
-      'Washer & cartridge replacement',
-      'Teflon sealing on connectors',
-      'Water pressure verification'
+      'Floor and wall tile descaling and scrubbing',
+      'Toilet bowl, washbasin, and mirror cleaning',
+      'Tap, shower, and chrome fixture descaling',
+      'Exhaust fan exterior and floor drain cleaning'
+    ],
+    additional_info: [
+      'Please remove personal toiletries from shelves before arrival.',
+      'Old permanent cement or paint stains may not be completely removable.'
     ]
   },
   {
     id: 'srv-5',
-    category_id: 'cat-4',
-    name: 'Intense Bathroom Deep Cleaning',
-    description: 'Hard water stain removal, tile descaling, toilet & tap scrubbing with sanitizing agent.',
-    price: 499,
-    duration: 90,
-    rating: 4.9,
-    reviews_count: 670,
+    category_id: 'cat-appliance',
+    name: 'Refrigerator Checkup & Diagnosis',
+    description: 'Comprehensive inspection for single or double-door refrigerators.',
+    price: 349,
+    duration: 45,
     is_active: true,
-    image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/5691568/5691568-hd_1280_720_25fps.mp4',
     included: [
-      'Floor & wall tile descaling',
-      'Chrome fitting buffing and shine',
-      'Mirror & exhaust fan cleaning',
-      'Full disinfection'
+      'Compressor relay, overload protector, and thermostat check',
+      'Cooling coil and defrost heater inspection',
+      'Door gasket sealing assessment',
+      'Complete fault report and repair estimate'
+    ],
+    additional_info: [
+      'Covers visit and diagnostic inspection. Spare parts or gas charging are quoted separately.',
+      'Please clear perishable food items if the unit is not cooling.'
+    ]
+  },
+  {
+    id: 'srv-6',
+    category_id: 'cat-carpentry',
+    name: 'Door Lock & Hinge Repair',
+    description: 'Fix misaligned doors, jammed mortise locks, or loose cabinet hinges.',
+    price: 299,
+    duration: 45,
+    is_active: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/6474133/6474133-hd_1280_720_25fps.mp4',
+    included: [
+      'Alignment and tightening of up to 2 door hinges or latches',
+      'Lubrication and repair of standard door lock',
+      'Minor wood planing if door is rubbing against frame'
+    ],
+    additional_info: [
+      'New lock sets or specialty hydraulic hinges must be provided by the customer.'
+    ]
+  },
+  {
+    id: 'srv-7',
+    category_id: 'cat-pest',
+    name: 'Cockroach & Ant Control',
+    description: 'Odourless gel and spray treatment for 1–2 BHK kitchens and living areas.',
+    price: 899,
+    duration: 60,
+    is_active: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/4109356/4109356-hd_1280_720_25fps.mp4',
+    included: [
+      'Odourless gel baiting in kitchen cabinets and hinges',
+      'Targeted perimeter spray around sinks and drains',
+      'Safe treatment suitable for households without vacating'
+    ],
+    additional_info: [
+      'Keep uncovered food items stored away during the treatment.',
+      'Avoid washing treated kitchen corners for 24 hours for best effectiveness.'
+    ]
+  },
+  {
+    id: 'srv-8',
+    category_id: 'cat-painting',
+    name: 'Single Wall Touch-Up & Painting',
+    description: 'Professional repainting of one accent or scuffed interior wall (up to 150 sq ft).',
+    price: 1499,
+    duration: 180,
+    is_active: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/6474129/6474129-hd_1280_720_25fps.mp4',
+    included: [
+      'Surface sanding and minor crack putty filling',
+      '1 coat of primer and 2 coats of standard emulsion paint',
+      'Floor masking and post-painting cleanup'
+    ],
+    additional_info: [
+      'Paint material cost is separate unless customer supplies preferred shade.',
+      'Heavy furniture should be moved 3–4 feet away from the wall.'
+    ]
+  },
+  {
+    id: 'srv-9',
+    category_id: 'cat-civil',
+    name: 'Bathroom Tile Grouting',
+    description: 'Waterproof epoxy or cement regrouting to prevent floor seepage.',
+    price: 799,
+    duration: 90,
+    is_active: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/6474133/6474133-hd_1280_720_25fps.mp4',
+    included: [
+      'Scraping and cleaning old damaged grout lines',
+      'Application of waterproof tile grout across bathroom floor',
+      'Surface wipe-down and finishing'
+    ],
+    additional_info: [
+      'Do not use the bathroom for 12 hours after grouting to allow proper curing.'
+    ]
+  },
+  {
+    id: 'srv-10',
+    category_id: 'cat-gardening',
+    name: 'Balcony Garden Maintenance',
+    description: 'Pruning, repotting, soil turning, and general plant health care.',
+    price: 449,
+    duration: 60,
+    is_active: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/4505543/4505543-hd_1280_720_25fps.mp4',
+    included: [
+      'Pruning and trimming of up to 15 potted plants',
+      'Soil aeration, weeding, and organic manure mixing',
+      'Dry leaf clearing and workspace tidy-up'
+    ],
+    additional_info: [
+      'New ceramic pots, potting mix, or saplings are not included.'
+    ]
+  },
+  {
+    id: 'srv-11',
+    category_id: 'cat-shifting',
+    name: 'Local Shifting Packing Support',
+    description: 'On-site volume survey and starter packing support for 1 BHK local moves.',
+    price: 1299,
+    duration: 120,
+    is_active: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1600518464441-9154a4dea21b?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/7464552/7464552-hd_1280_720_25fps.mp4',
+    included: [
+      '2 trained packing helpers for 2 hours',
+      'Disassembly of standard bed or dining table',
+      'Organized labelling and box preparation'
+    ],
+    additional_info: [
+      'Transport vehicle and additional cartons are arranged based on distance and load.'
+    ]
+  },
+  {
+    id: 'srv-12',
+    category_id: 'cat-renovation',
+    name: 'Home Renovation Consultation',
+    description: 'Detailed measurement, layout review, and scope estimate for kitchen or bath upgrades.',
+    price: 499,
+    duration: 60,
+    is_active: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80',
+    video_url: 'https://videos.pexels.com/video-files/6474129/6474129-hd_1280_720_25fps.mp4',
+    included: [
+      'On-site measurement and structural feasibility check',
+      'Material and timeline walkthrough',
+      'Written itemized estimate shared after inspection'
+    ],
+    additional_info: [
+      'Consultation fee is adjustable against the final renovation work order.'
     ]
   }
 ];
 
-export const INITIAL_PARTNERS: PartnerProfile[] = [
-  {
-    id: 'part-1',
-    user_id: 'usr-part-1',
-    full_name: 'Rajesh Kumar',
-    email: 'rajesh.partner@homeservices.local',
-    phone: '+91 98765 43210',
-    skills: ['AC Repair', 'Appliance Servicing', 'Electrical Wiring'],
-    availability: 'Available Today (9 AM - 7 PM)',
-    verification_status: 'verified',
-    is_active: true,
-    rating: 4.9,
-    total_jobs: 148
-  },
-  {
-    id: 'part-2',
-    user_id: 'usr-part-2',
-    full_name: 'Amit Verma',
-    email: 'amit.plumbing@homeservices.local',
-    phone: '+91 98111 22334',
-    skills: ['Plumbing', 'Sanitary Fittings', 'Water Purifier'],
-    availability: 'Available (Morning Slots)',
-    verification_status: 'verified',
-    is_active: true,
-    rating: 4.8,
-    total_jobs: 94
-  },
-  {
-    id: 'part-3',
-    user_id: 'usr-part-3',
-    full_name: 'Pooja Sharma',
-    email: 'pooja.clean@homeservices.local',
-    phone: '+91 99222 33445',
-    skills: ['Deep Cleaning', 'Sanitization', 'Kitchen Cleaning'],
-    availability: 'Available Today',
-    verification_status: 'verified',
-    is_active: true,
-    rating: 5.0,
-    total_jobs: 210
-  }
-];
+// Intentionally empty: real customer reviews come from user submissions / Supabase backend.
+export const INITIAL_REVIEWS: ServiceReview[] = [];
 
 export const INITIAL_USERS: UserProfile[] = [
   {
@@ -188,76 +384,7 @@ export const INITIAL_USERS: UserProfile[] = [
     phone: '+91 98220 12345',
     role: 'customer',
     created_at: new Date(Date.now() - 86400000 * 7).toISOString()
-  },
-  {
-    id: 'usr-part-1',
-    email: 'rajesh.partner@homeservices.local',
-    full_name: 'Rajesh Kumar',
-    phone: '+91 98765 43210',
-    role: 'partner',
-    created_at: new Date(Date.now() - 86400000 * 30).toISOString()
-  },
-  {
-    id: 'usr-admin-1',
-    email: 'admin@homeservices.local',
-    full_name: 'Platform Operations Admin',
-    phone: '+91 99999 00000',
-    role: 'admin',
-    created_at: new Date(Date.now() - 86400000 * 60).toISOString()
   }
 ];
 
-export const INITIAL_BOOKINGS: Booking[] = [
-  {
-    id: 'book-1001',
-    booking_number: 'HS-2026-1001',
-    customer_id: 'usr-cust-1',
-    customer_name: 'Rohit Gupta',
-    customer_phone: '+91 98220 12345',
-    service_id: 'srv-1',
-    service_name: 'AC Master Jet Servicing (Split)',
-    service_price_snapshot: 599,
-    partner_id: 'part-1',
-    partner_name: 'Rajesh Kumar',
-    partner_phone: '+91 98765 43210',
-    scheduled_at: new Date(Date.now() + 86400000).toISOString(),
-    address: 'Flat 402, Sunshine Heights, Outer Ring Road',
-    landmark: 'Opposite Metro Station Gate 3',
-    city: 'Bengaluru',
-    pincode: '560103',
-    customer_notes: 'AC makes a rattling vibration when switched on.',
-    status: 'assigned',
-    payment: {
-      id: 'pay-1001',
-      booking_id: 'book-1001',
-      amount: 599,
-      method: 'UPI QR',
-      transaction_reference: 'UPI/612345789012/PAY',
-      status: 'submitted',
-      submitted_at: new Date(Date.now() - 3600000).toISOString()
-    },
-    status_history: [
-      {
-        id: 'hist-1',
-        booking_id: 'book-1001',
-        changed_by: 'usr-cust-1',
-        changed_by_name: 'Rohit Gupta',
-        new_status: 'pending',
-        note: 'Customer created booking and submitted UPI reference',
-        created_at: new Date(Date.now() - 7200000).toISOString()
-      },
-      {
-        id: 'hist-2',
-        booking_id: 'book-1001',
-        changed_by: 'usr-admin-1',
-        changed_by_name: 'Platform Admin',
-        old_status: 'pending',
-        new_status: 'assigned',
-        note: 'Assigned to Rajesh Kumar (AC Specialist)',
-        created_at: new Date(Date.now() - 1800000).toISOString()
-      }
-    ],
-    created_at: new Date(Date.now() - 7200000).toISOString(),
-    updated_at: new Date(Date.now() - 1800000).toISOString()
-  }
-];
+export const INITIAL_BOOKINGS: Booking[] = [];

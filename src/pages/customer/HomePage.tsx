@@ -1,187 +1,407 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { serviceService } from '../../services/service.service';
-import { formatCurrency } from '../../lib/utils';
-import { 
-  Sparkles, 
-  Search, 
-  ArrowRight, 
-  ShieldCheck, 
-  Clock, 
-  CheckCircle2, 
-  Star, 
+import { useAuth } from '../../features/auth/AuthContext';
+import { HERO_BACKGROUND_VIDEOS } from '../../lib/mock-data';
+import { SearchBar } from '../../components/customer/SearchBar';
+import { CategoryGrid } from '../../components/customer/CategoryGrid';
+import { ServiceCard } from '../../components/customer/ServiceCard';
+import { RatingStars } from '../../components/customer/RatingStars';
+import { AvailabilityBadge } from '../../components/customer/AvailabilityBadge';
+import { BookingButton } from '../../components/customer/BookingButton';
+import { BackgroundVideo } from '../../components/customer/BackgroundVideo';
+import { FAQSection } from '../../components/customer/FAQSection';
+import {
   ChevronRight,
-  Wrench,
-  Zap,
-  Droplets,
-  Hammer
+  IndianRupee,
+  CalendarClock,
+  ShieldCheck,
+  BellRing,
+  MapPin,
+  CheckCircle2,
+  MessageSquare
 } from 'lucide-react';
 
 export const CustomerHomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const categories = serviceService.getCategories();
-  const featuredServices = serviceService.getServices().slice(0, 4);
+  const navigate = useNavigate();
+  const { location } = useAuth();
 
-  const getCategoryIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Wrench': return <Wrench className="w-6 h-6 text-emerald-600" />;
-      case 'Zap': return <Zap className="w-6 h-6 text-amber-500" />;
-      case 'Droplets': return <Droplets className="w-6 h-6 text-blue-500" />;
-      case 'Sparkles': return <Sparkles className="w-6 h-6 text-purple-500" />;
-      case 'Hammer': return <Hammer className="w-6 h-6 text-orange-500" />;
-      default: return <Sparkles className="w-6 h-6 text-emerald-600" />;
-    }
+  const categories = serviceService.getCategories();
+  const popularServices = serviceService.getServices().slice(0, 8);
+  const topRatedServices = serviceService.getTopRatedServices(4);
+  const allReviews = serviceService.getAllReviews().slice(0, 3);
+  const ratingStats = serviceService.getOverallRatingStats();
+
+  const handleSearch = () => {
+    const q = searchQuery.trim();
+    navigate(q ? `/services?search=${encodeURIComponent(q)}` : '/services');
   };
 
+  const whyChooseItems = [
+    {
+      icon: <IndianRupee className="w-5 h-5 text-[#16A34A]" />,
+      title: 'Transparent Fixed Pricing',
+      description: 'Know the exact service price and what is included before you book.'
+    },
+    {
+      icon: <CalendarClock className="w-5 h-5 text-[#16A34A]" />,
+      title: 'Flexible Time Slots',
+      description: 'Choose a date and convenient 2-hour window that suits your schedule.'
+    },
+    {
+      icon: <ShieldCheck className="w-5 h-5 text-[#16A34A]" />,
+      title: 'Trained Professionals',
+      description: 'Skilled technicians equipped for everyday home repair and maintenance.'
+    },
+    {
+      icon: <BellRing className="w-5 h-5 text-[#16A34A]" />,
+      title: 'Clear Status Tracking',
+      description: 'Follow booking confirmation, payment verification, and job progress.'
+    }
+  ];
+
+  const howItWorksSteps = [
+    {
+      step: '01',
+      title: 'Choose a Service',
+      description: 'Browse categories and review fixed pricing and task inclusions.'
+    },
+    {
+      step: '02',
+      title: 'Pick Date & Address',
+      description: 'Select your preferred appointment slot and enter your service address.'
+    },
+    {
+      step: '03',
+      title: 'Confirm & Pay via UPI',
+      description: 'Complete payment with UPI QR and submit your transaction reference.'
+    },
+    {
+      step: '04',
+      title: 'Service Completed',
+      description: 'Track partner assignment and service updates from start to finish.'
+    }
+  ];
+
   return (
-    <div className="space-y-10">
-      {/* Hero Banner */}
-      <section className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white p-6 sm:p-10 shadow-xl">
-        <div className="relative z-10 max-w-2xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold backdrop-blur-sm">
-            <Sparkles className="w-3.5 h-3.5" />
-            Reliable Certified Home Services
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            Expert Help for Every Corner of Your Home
-          </h1>
-          <p className="text-emerald-100 text-sm sm:text-base leading-relaxed">
-            Transparent pricing, verified background-checked service partners, and instant booking with UPI.
-          </p>
+    <div className="w-full overflow-x-clip">
+      {/* 1. Full-Bleed Background Video Hero with Transparent Glass Left Panel */}
+      <section className="relative min-h-[470px] sm:min-h-[580px] lg:min-h-[650px] flex items-center overflow-hidden border-b border-white/40">
+        {/* User's Attached Background Looping Video */}
+        <div className="absolute inset-0 z-0">
+          <BackgroundVideo
+            src={HERO_BACKGROUND_VIDEOS.cleaning}
+            poster="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1400&q=85"
+            alt="Home service workers performing home services"
+            autoPlayAlways
+            className="w-full h-full object-cover"
+          />
+          {/* Light left-to-right scrim so video stays bright and clearly visible */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/60 via-slate-950/25 to-transparent" />
+        </div>
 
-          {/* Quick Search */}
-          <div className="pt-2 flex flex-col sm:flex-row gap-2 max-w-lg">
-            <div className="relative flex-1">
-              <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search AC servicing, plumbing, cleaning..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-white text-slate-900 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-emerald-400 shadow-md"
+        {/* Left-Aligned Transparent Glass Panel (Right Side Left Open for Video) */}
+        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 py-7 sm:py-16">
+          <div className="max-w-xl bg-slate-950/25 backdrop-blur-md border border-white/25 rounded-2xl sm:rounded-3xl p-5 sm:p-9 space-y-4 sm:space-y-6 shadow-2xl">
+            {/* Location & Availability Pill */}
+            <div className="inline-flex flex-wrap items-center gap-2 sm:gap-3 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/30 text-xs sm:text-sm text-white">
+              <span className="inline-flex items-center gap-1.5 font-medium">
+                <MapPin className="w-3.5 h-3.5 text-[#4ADE80]" />
+                Serving {location}
+              </span>
+              <span className="text-white/30">|</span>
+              <span className="inline-flex items-center gap-1.5 font-medium text-[#86EFAC]">
+                <span className="w-2 h-2 rounded-full bg-[#4ADE80]" />
+                Available Now
+              </span>
+            </div>
+
+            <div className="space-y-2.5 sm:space-y-3">
+              <h1 className="text-[26px] sm:text-5xl font-bold text-white tracking-tight leading-[1.14] drop-shadow-sm">
+                Reliable Home Services,{' '}
+                <span className="text-[#4ADE80]">Right at Your Doorstep</span>
+              </h1>
+              <p className="text-sm sm:text-base text-white/90 leading-relaxed">
+                Book trusted professionals for AC servicing, plumbing, electrical, cleaning, and everyday home repairs with upfront fixed pricing.
+              </p>
+            </div>
+
+            {/* Search Bar */}
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onSubmit={handleSearch}
+              placeholder="Search for cleaning, AC repair, plumbing..."
+              showButton
+            />
+
+            {/* Two CTA Buttons */}
+            <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3">
+              <BookingButton
+                to="/services"
+                label="Explore Services"
+                fullWidth={false}
+                size="lg"
               />
+              <a
+                href="#how-it-works"
+                className="min-h-[48px] px-6 inline-flex items-center justify-center rounded-xl bg-white/15 hover:bg-white/25 active:opacity-80 backdrop-blur-md border border-white/35 text-white font-semibold text-base transition-colors"
+              >
+                How It Works
+              </a>
+            </div>
+
+            {/* Trust Indicators & Real Overall Rating */}
+            <div className="pt-4 border-t border-white/20 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm text-white/90">
+              <span className="inline-flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-[#4ADE80]" />
+                Upfront fixed prices
+              </span>
+              <span className="inline-flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-[#4ADE80]" />
+                {categories.length} service categories
+              </span>
+              {ratingStats.average !== null && ratingStats.totalReviews > 0 && (
+                <div className="bg-white/90 px-2.5 py-1 rounded-lg">
+                  <RatingStars
+                    rating={ratingStats.average}
+                    reviewCount={ratingStats.totalReviews}
+                    size="sm"
+                    showNewBadge={false}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Service Categories */}
+      <section className="relative py-12 sm:py-16">
+        <div className="pointer-events-none absolute -top-12 right-10 w-72 h-72 rounded-full bg-[#16A34A]/10 blur-3xl" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A]">
+                Service Categories
+              </h2>
+              <p className="text-sm text-[#6B7280] mt-1">
+                Choose a category to explore available home services
+              </p>
             </div>
             <Link
-              to={`/services?search=${encodeURIComponent(searchQuery)}`}
-              className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-emerald-500/20"
+              to="/services"
+              className="text-sm font-semibold text-[#16A34A] hover:text-[#15803D] inline-flex items-center gap-1 shrink-0"
             >
-              Search
-              <ArrowRight className="w-4 h-4" />
+              View All
+              <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
-        </div>
 
-        {/* Value Prop Badges */}
-        <div className="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs text-emerald-100">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
-            <span>100% Background-Checked Technicians</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-emerald-400 shrink-0" />
-            <span>On-Time Arrival Guarantee</span>
-          </div>
-          <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
-            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-            <span>Transparent Upfront UPI Pricing</span>
-          </div>
+          <CategoryGrid categories={categories} />
         </div>
       </section>
 
-      {/* Categories Grid */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Explore Categories</h2>
-            <p className="text-xs sm:text-sm text-slate-500">Select a category to view specialized experts</p>
-          </div>
-          <Link to="/services" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
-            View All <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
+      {/* 3. Popular Services — 4 Cards Per Row */}
+      <section className="relative py-12 sm:py-16 bg-[#ECFDF5]/60 border-y border-white/80">
+        <div className="pointer-events-none absolute top-10 left-8 w-80 h-80 rounded-full bg-[#1E3A8A]/8 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-10 right-8 w-80 h-80 rounded-full bg-[#16A34A]/12 blur-3xl" />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
-          {categories.map((cat) => (
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A]">
+                Popular Home Services
+              </h2>
+              <p className="text-sm text-[#6B7280] mt-1">
+                Everyday maintenance and repair services at transparent fixed prices
+              </p>
+            </div>
             <Link
-              key={cat.id}
-              to={`/services?category=${cat.id}`}
-              className="group bg-white p-4 rounded-2xl border border-slate-200/80 hover:border-emerald-500 hover:shadow-md transition-all flex flex-col items-center text-center space-y-3"
+              to="/services"
+              className="text-sm font-semibold text-[#16A34A] hover:text-[#15803D] inline-flex items-center gap-1 shrink-0"
             >
-              <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center group-hover:scale-105 transition-transform">
-                {getCategoryIcon(cat.icon)}
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-900 text-sm group-hover:text-emerald-600 transition-colors">
-                  {cat.name}
-                </h3>
-                <p className="text-[11px] text-slate-400 line-clamp-1 mt-0.5">
-                  {cat.description}
-                </p>
-              </div>
+              Browse All Services
+              <ChevronRight className="w-4 h-4" />
             </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Services */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Most Booked Services</h2>
-            <p className="text-xs sm:text-sm text-slate-500">Top-rated home care solutions with instant slot selection</p>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {featuredServices.map((service) => (
-            <div
-              key={service.id}
-              className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden flex flex-col hover:shadow-lg transition-all group"
-            >
-              <div className="relative h-44 overflow-hidden bg-slate-100">
-                <img
-                  src={service.image_url}
-                  alt={service.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {popularServices.map((service) => {
+              const cat = serviceService.getCategoryById(service.category_id);
+              return (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  categoryName={cat?.name}
                 />
-                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-md text-xs font-bold text-slate-800 flex items-center gap-1 shadow-sm">
-                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                  {service.rating} ({service.reviews_count})
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Top-Rated Services */}
+      <section className="relative py-12 sm:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A]">
+                Top-Rated Services
+              </h2>
+              <p className="text-sm text-[#6B7280] mt-1">
+                Featured services highlighted by customer feedback and demand
+              </p>
+            </div>
+            <Link
+              to="/services"
+              className="text-sm font-semibold text-[#16A34A] hover:text-[#15803D] inline-flex items-center gap-1 shrink-0"
+            >
+              See All
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {topRatedServices.map((service) => {
+              const cat = serviceService.getCategoryById(service.category_id);
+              return (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  categoryName={cat?.name}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Why Choose Us */}
+      <section className="relative py-12 sm:py-16 bg-[#ECFDF5]/60 border-y border-white/80">
+        <div className="pointer-events-none absolute -bottom-16 left-1/3 w-96 h-96 rounded-full bg-[#16A34A]/10 blur-3xl" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A]">
+              Why Choose QuickSolution
+            </h2>
+            <p className="text-sm sm:text-base text-[#6B7280] mt-1.5">
+              Built for clarity, reliability, and peace of mind every time you book a service.
+            </p>
+          </div>
+
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-2 -mx-4 px-4 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
+            {whyChooseItems.map((item) => (
+              <div
+                key={item.title}
+                className="snap-start shrink-0 w-[260px] sm:w-auto glass-card rounded-2xl p-5 sm:p-6 space-y-3"
+              >
+                <div className="w-11 h-11 rounded-xl bg-[#F2FAF5] border border-[#16A34A]/20 flex items-center justify-center">
+                  {item.icon}
                 </div>
+                <h3 className="text-base font-semibold text-[#1E3A8A]">{item.title}</h3>
+                <p className="text-sm text-[#4B5563] leading-relaxed">{item.description}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
-                <div>
-                  <h3 className="font-bold text-slate-900 text-base line-clamp-1 group-hover:text-emerald-600 transition-colors">
-                    {service.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 line-clamp-2 mt-1">
-                    {service.description}
-                  </p>
-                  <div className="mt-2 text-xs text-slate-500 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Takes approx {service.duration} mins</span>
-                  </div>
-                </div>
+      {/* 6. How It Works */}
+      <section id="how-it-works" className="relative py-12 sm:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A]">
+              How It Works
+            </h2>
+            <p className="text-sm sm:text-base text-[#6B7280] mt-1.5">
+              Schedule a home service in four simple steps.
+            </p>
+          </div>
 
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs text-slate-400 block">Fixed Price</span>
-                    <span className="text-lg font-extrabold text-slate-900">
-                      {formatCurrency(service.price)}
-                    </span>
-                  </div>
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-2 -mx-4 px-4 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
+            {howItWorksSteps.map((item) => (
+              <div
+                key={item.step}
+                className="snap-start shrink-0 w-[250px] sm:w-auto glass-card rounded-2xl p-5 sm:p-6 space-y-3"
+              >
+                <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#16A34A] text-white text-sm font-bold shadow-sm">
+                  {item.step}
+                </span>
+                <h3 className="text-base font-semibold text-[#1E3A8A]">{item.title}</h3>
+                <p className="text-sm text-[#4B5563] leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-                  <Link
-                    to={`/service/${service.id}`}
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors shadow-sm shadow-emerald-600/20"
-                  >
-                    Book Now
-                  </Link>
-                </div>
+      {/* 7. Customer Reviews */}
+      <section className="relative py-12 sm:py-16 bg-[#ECFDF5]/60 border-y border-white/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A]">
+              Customer Reviews
+            </h2>
+            <p className="text-sm text-[#6B7280] mt-1">
+              Verified feedback submitted by customers who used our services
+            </p>
+          </div>
+
+          {allReviews.length === 0 ? (
+            <div className="glass-card rounded-2xl p-8 text-center space-y-3">
+              <div className="w-12 h-12 rounded-xl bg-[#F2FAF5] text-[#16A34A] flex items-center justify-center mx-auto">
+                <MessageSquare className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-[#1E3A8A]">
+                Customer reviews will appear here
+              </h3>
+              <p className="text-sm text-[#4B5563] max-w-md mx-auto">
+                We only display real customer feedback. Select any service to view details or share your experience after booking.
+              </p>
+              <div className="pt-1">
+                <BookingButton to="/services" label="Explore Services" fullWidth={false} size="sm" />
               </div>
             </div>
-          ))}
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {allReviews.map((review) => {
+                const srv = serviceService.getServiceById(review.service_id);
+                return (
+                  <div
+                    key={review.id}
+                    className="glass-card rounded-2xl p-6 space-y-3"
+                  >
+                    <RatingStars rating={review.rating} reviewCount={1} size="sm" showNewBadge={false} />
+                    <p className="text-sm text-[#1F2937] leading-relaxed">
+                      &ldquo;{review.comment}&rdquo;
+                    </p>
+                    <div className="pt-2 border-t border-white/70 flex items-center justify-between text-xs text-[#6B7280]">
+                      <span className="font-semibold text-[#1E3A8A]">{review.customer_name}</span>
+                      {srv && <span>{srv.name}</span>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 8. Frequently Asked Questions */}
+      <section className="py-12 sm:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
+          <div className="text-center space-y-1.5">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A]">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-sm text-[#6B7280]">
+              Everything you need to know about pricing, scheduling, and payments
+            </p>
+          </div>
+
+          <FAQSection />
         </div>
       </section>
     </div>
