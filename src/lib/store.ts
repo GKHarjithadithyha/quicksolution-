@@ -28,11 +28,11 @@ class LocalStorageStore {
   }
 
   getReviews(): ServiceReview[] {
-    return this.get('hs_reviews_v3', INITIAL_REVIEWS);
+    return this.get('hs_reviews_v4', INITIAL_REVIEWS);
   }
 
   saveReviews(data: ServiceReview[]): void {
-    this.set('hs_reviews_v3', data);
+    this.set('hs_reviews_v4', data);
   }
 
   getBookings(): Booking[] {

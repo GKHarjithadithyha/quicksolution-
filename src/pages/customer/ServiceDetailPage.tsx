@@ -38,10 +38,6 @@ export const ServiceDetailPage: React.FC = () => {
   const reviews = serviceService.getReviewsForService(service.id);
 
   const handleBookClick = () => {
-    if (!user) {
-      navigate(`/login?redirect=${encodeURIComponent(`/book/${service.id}`)}`);
-      return;
-    }
     navigate(`/book/${service.id}`);
   };
 
@@ -286,10 +282,8 @@ export const ServiceDetailPage: React.FC = () => {
 
             <BookingButton onClick={handleBookClick} label="Book Now" size="lg" />
 
-            <p className="text-xs text-[#6B7280] text-center leading-relaxed">
-              {user
-                ? 'Choose your preferred schedule and address on the next step.'
-                : 'You will be asked to sign in before confirming your booking.'}
+            <p className="text-xs text-[#475467] text-center leading-relaxed">
+              Choose your preferred schedule and address on the next step. Sign in right before payment.
             </p>
           </div>
         </aside>

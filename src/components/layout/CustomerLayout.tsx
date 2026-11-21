@@ -145,9 +145,9 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
         {children}
       </main>
 
-      {/* Midnight Navy Brand Footer */}
+      {/* Midnight Navy Brand Footer (Desktop Web Only — hidden on Mobile/Android App) */}
       {!hideMobileNav && (
-        <footer className="bg-[#172B4D] text-white mt-12">
+        <footer className="hidden md:block bg-[#172B4D] text-white mt-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
             {/* Brand */}
             <div className="space-y-3">

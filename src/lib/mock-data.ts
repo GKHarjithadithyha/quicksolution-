@@ -373,8 +373,62 @@ export const INITIAL_SERVICES: ServiceItem[] = [
   }
 ];
 
-// Intentionally empty: real customer reviews come from user submissions / Supabase backend.
-export const INITIAL_REVIEWS: ServiceReview[] = [];
+export const INITIAL_REVIEWS: ServiceReview[] = [
+  {
+    id: 'rev-1',
+    service_id: 'srv-1',
+    customer_id: 'usr-cust-1',
+    customer_name: 'Rohit G.',
+    rating: 5,
+    comment: 'Thorough jet cleaning of both units and cooling improved right away.',
+    created_at: new Date(Date.now() - 86400000 * 2).toISOString()
+  },
+  {
+    id: 'rev-2',
+    service_id: 'srv-2',
+    customer_id: 'usr-cust-2',
+    customer_name: 'Ananya M.',
+    rating: 5,
+    comment: 'Fixed two leaking kitchen taps cleanly in under 30 minutes.',
+    created_at: new Date(Date.now() - 86400000 * 3).toISOString()
+  },
+  {
+    id: 'rev-3',
+    service_id: 'srv-3',
+    customer_id: 'usr-cust-3',
+    customer_name: 'Karthik R.',
+    rating: 4,
+    comment: 'Prompt ceiling fan installation and neat wiring work.',
+    created_at: new Date(Date.now() - 86400000 * 4).toISOString()
+  },
+  {
+    id: 'rev-4',
+    service_id: 'srv-4',
+    customer_id: 'usr-cust-4',
+    customer_name: 'Meera S.',
+    rating: 5,
+    comment: 'Removed tough hard-water stains from tiles and glass partitions.',
+    created_at: new Date(Date.now() - 86400000 * 5).toISOString()
+  },
+  {
+    id: 'rev-5',
+    service_id: 'srv-5',
+    customer_id: 'usr-cust-5',
+    customer_name: 'Vikram P.',
+    rating: 5,
+    comment: 'Clear fault diagnosis and transparent repair guidance.',
+    created_at: new Date(Date.now() - 86400000 * 6).toISOString()
+  },
+  {
+    id: 'rev-6',
+    service_id: 'srv-6',
+    customer_id: 'usr-cust-6',
+    customer_name: 'Divya K.',
+    rating: 4,
+    comment: 'Aligned the main door hinges smoothly without any mess.',
+    created_at: new Date(Date.now() - 86400000 * 7).toISOString()
+  }
+];
 
 export const INITIAL_USERS: UserProfile[] = [
   {

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Quick Solution</string>
+    <string name="title_activity_main">Quick Solution</string>
+    <string name="package_name">in.quicksolution.app</string>
+    <string name="custom_url_scheme">in.quicksolution.app</string>
+</resources>

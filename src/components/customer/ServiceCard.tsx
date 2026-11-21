@@ -80,7 +80,7 @@ export const ServiceCard: React.FC<{
             {service.description}
           </p>
 
-          {/* Rating & Booking Popularity */}
+          {/* Rating & Availability */}
           <div className="pt-1 space-y-1.5">
             <RatingStars
               rating={service.average_rating}

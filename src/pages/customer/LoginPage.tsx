@@ -31,9 +31,13 @@ export const LoginPage: React.FC = () => {
       <div className="bg-white border border-[#E8EAED] rounded-2xl p-6 sm:p-8 space-y-6">
         <div className="space-y-2 text-center">
           <QuickSolutionLogo variant="stacked" theme="light" showTagline size="md" />
-          <h1 className="text-2xl font-bold text-[#172B4D] pt-2">Welcome back</h1>
+          <h1 className="text-2xl font-bold text-[#172B4D] pt-2">
+            {redirectTo.startsWith('/payment/') ? 'Sign in to pay' : 'Welcome back'}
+          </h1>
           <p className="text-sm text-[#475467]">
-            Sign in to schedule services and track your bookings
+            {redirectTo.startsWith('/payment/')
+              ? 'Sign in or create an account to choose Cash, Card, or UPI payment'
+              : 'Sign in to schedule services and track your bookings'}
           </p>
         </div>
 

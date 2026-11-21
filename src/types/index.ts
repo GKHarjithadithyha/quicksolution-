@@ -94,11 +94,13 @@ export interface Booking {
   updated_at: string;
 }
 
+export type PaymentMethod = 'UPI' | 'Card' | 'Cash' | 'UPI QR';
+
 export interface Payment {
   id: string;
   booking_id: string;
   amount: number;
-  method: 'UPI QR';
+  method: PaymentMethod;
   transaction_reference?: string;
   status: PaymentStatus;
   verified_by?: string;

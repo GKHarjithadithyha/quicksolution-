@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { bookingService } from '../../services/booking.service';
+import { useAuth } from '../../features/auth/AuthContext';
 import { BookingStatusBadge, PaymentStatusBadge } from '../../components/common/StatusBadges';
 import { BookingTimeline } from '../../components/customer/BookingTimeline';
 import { EmptyState } from '../../components/customer/StateViews';
@@ -18,10 +19,17 @@ import {
 
 export const BookingDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const isConfirmationView = searchParams.get('confirmed') === 'true';
 
   const booking = bookingService.getBookingById(id || '');
+
+  const paymentTarget = booking
+    ? user
+      ? `/payment/${booking.id}`
+      : `/login?redirect=${encodeURIComponent(`/payment/${booking.id}`)}`
+    : '/my-bookings';
 
   if (!booking) {
     return (
@@ -93,10 +101,10 @@ export const BookingDetailsPage: React.FC = () => {
 
           <div className="space-y-3 pt-1">
             <Link
-              to={`/payment/${booking.id}`}
+              to={paymentTarget}
               className="w-full qs-btn-primary text-base flex items-center justify-center"
             >
-              Continue to Payment
+              {user ? 'Continue to Payment' : 'Sign In & Continue to Payment'}
             </Link>
 
             <button
@@ -164,10 +172,10 @@ export const BookingDetailsPage: React.FC = () => {
             </div>
           </div>
           <Link
-            to={`/payment/${booking.id}`}
+            to={paymentTarget}
             className="qs-btn-primary px-5 text-sm inline-flex items-center justify-center shrink-0"
           >
-            Continue to Payment
+            {user ? 'Continue to Payment' : 'Sign In to Pay'}
           </Link>
         </div>
       )}

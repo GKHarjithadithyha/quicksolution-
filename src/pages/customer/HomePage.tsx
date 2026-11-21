@@ -4,7 +4,6 @@ import { serviceService } from '../../services/service.service';
 import { useAuth } from '../../features/auth/AuthContext';
 import { HERO_BACKGROUND_VIDEOS } from '../../lib/mock-data';
 import { SearchBar } from '../../components/customer/SearchBar';
-import { CategoryGrid } from '../../components/customer/CategoryGrid';
 import { ServiceCard } from '../../components/customer/ServiceCard';
 import { RatingStars } from '../../components/customer/RatingStars';
 import { BookingButton } from '../../components/customer/BookingButton';
@@ -26,9 +25,7 @@ export const CustomerHomePage: React.FC = () => {
   const navigate = useNavigate();
   const { location } = useAuth();
 
-  const categories = serviceService.getCategories();
-  const popularServices = serviceService.getServices().slice(0, 8);
-  const topRatedServices = serviceService.getTopRatedServices(4);
+  const servicesProvided = serviceService.getServices().slice(0, 4);
   const allReviews = serviceService.getAllReviews().slice(0, 3);
   const ratingStats = serviceService.getOverallRatingStats();
 
@@ -64,7 +61,7 @@ export const CustomerHomePage: React.FC = () => {
     {
       step: '01',
       title: 'Choose a Service',
-      description: 'Browse categories and review fixed pricing and task inclusions.'
+      description: 'Browse services and review fixed pricing and task inclusions.'
     },
     {
       step: '02',
@@ -150,15 +147,11 @@ export const CustomerHomePage: React.FC = () => {
               </a>
             </div>
 
-            {/* Trust Indicators & Real Overall Rating */}
+            {/* Trust Indicators & Overall Rating */}
             <div className="pt-4 border-t border-white/20 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm text-white/90">
               <span className="inline-flex items-center gap-1.5 font-medium">
                 <CheckCircle2 className="w-4 h-4 text-[#B9FF66]" />
                 Upfront fixed prices
-              </span>
-              <span className="inline-flex items-center gap-1.5 font-medium">
-                <CheckCircle2 className="w-4 h-4 text-[#B9FF66]" />
-                {categories.length} service categories
               </span>
               {ratingStats.average !== null && ratingStats.totalReviews > 0 && (
                 <div className="bg-white px-2.5 py-1 rounded-lg">
@@ -175,54 +168,29 @@ export const CustomerHomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. Service Categories */}
+      {/* 2. Services Provided — 4 Services + View All Redirecting to Explore Services */}
       <section className="py-10 sm:py-16 bg-[#F7F9F4]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold text-[#172B4D]">
-                Service Categories
+                Services Provided
               </h2>
               <p className="text-sm text-[#475467] mt-1">
-                Choose a category to explore available home services
+                Everyday home maintenance and repair services with transparent pricing and customer reviews
               </p>
             </div>
             <Link
               to="/services"
-              className="text-sm font-semibold text-[#172B4D] hover:underline inline-flex items-center gap-1 shrink-0"
+              className="qs-btn-secondary px-4 min-h-[42px] text-sm inline-flex items-center gap-1.5 shrink-0"
             >
-              View All
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <CategoryGrid categories={categories} />
-        </div>
-      </section>
-
-      {/* 3. Popular Services — 4 Cards Per Row */}
-      <section className="py-10 sm:py-16 bg-[#EEF3EC] border-y border-[#DDE3E8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#172B4D]">
-                Popular Home Services
-              </h2>
-              <p className="text-sm text-[#475467] mt-1">
-                Everyday maintenance and repair services at transparent fixed prices
-              </p>
-            </div>
-            <Link
-              to="/services"
-              className="text-sm font-semibold text-[#172B4D] hover:underline inline-flex items-center gap-1 shrink-0"
-            >
-              Browse All Services
+              <span>View All</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {popularServices.map((service) => {
+            {servicesProvided.map((service) => {
               const cat = serviceService.getCategoryById(service.category_id);
               return (
                 <ServiceCard
@@ -236,43 +204,7 @@ export const CustomerHomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. Top-Rated Services */}
-      <section className="py-10 sm:py-16 bg-[#F7F9F4]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#172B4D]">
-                Top-Rated Services
-              </h2>
-              <p className="text-sm text-[#475467] mt-1">
-                Featured services highlighted by customer feedback and demand
-              </p>
-            </div>
-            <Link
-              to="/services"
-              className="text-sm font-semibold text-[#172B4D] hover:underline inline-flex items-center gap-1 shrink-0"
-            >
-              See All
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {topRatedServices.map((service) => {
-              const cat = serviceService.getCategoryById(service.category_id);
-              return (
-                <ServiceCard
-                  key={service.id}
-                  service={service}
-                  categoryName={cat?.name}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Why Choose Us */}
+      {/* 3. Why Choose Us */}
       <section className="py-10 sm:py-16 bg-[#EEF3EC] border-y border-[#DDE3E8]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
           <div className="max-w-2xl">
@@ -301,7 +233,7 @@ export const CustomerHomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 6. How It Works */}
+      {/* 4. How It Works */}
       <section id="how-it-works" className="py-10 sm:py-16 bg-[#F7F9F4]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
           <div className="max-w-2xl">
@@ -330,7 +262,7 @@ export const CustomerHomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 7. Customer Reviews */}
+      {/* 5. Customer Reviews */}
       <section className="py-10 sm:py-16 bg-[#EEF3EC] border-y border-[#DDE3E8]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
           <div>
@@ -338,7 +270,7 @@ export const CustomerHomePage: React.FC = () => {
               Customer Reviews
             </h2>
             <p className="text-sm text-[#475467] mt-1">
-              Verified feedback submitted by customers who used our services
+              Feedback shared by customers who booked with Quick Solution
             </p>
           </div>
 
@@ -351,7 +283,7 @@ export const CustomerHomePage: React.FC = () => {
                 Customer reviews will appear here
               </h3>
               <p className="text-sm text-[#475467] max-w-md mx-auto">
-                We only display real customer feedback. Select any service to view details or share your experience after booking.
+                Select any service to view details or share your experience after booking.
               </p>
               <div className="pt-1">
                 <BookingButton to="/services" label="Explore Services" fullWidth={false} size="sm" />
@@ -382,7 +314,7 @@ export const CustomerHomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 8. Frequently Asked Questions */}
+      {/* 6. Frequently Asked Questions */}
       <section className="py-10 sm:py-16 bg-[#F7F9F4]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
           <div className="text-center space-y-1.5">

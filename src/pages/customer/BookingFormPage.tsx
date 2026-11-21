@@ -14,6 +14,8 @@ import {
   User,
   ArrowLeft
 } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
+import { Geolocation } from '@capacitor/geolocation';
 import { toast } from 'sonner';
 
 const TIME_SLOTS = [
@@ -29,12 +31,6 @@ export const BookingFormPage: React.FC = () => {
   const { user } = useAuth();
 
   const service = serviceService.getServiceById(id || '');
-
-  useEffect(() => {
-    if (!user && id) {
-      navigate(`/login?redirect=${encodeURIComponent(`/book/${id}`)}`, { replace: true });
-    }
-  }, [user, id, navigate]);
 
   const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
 
@@ -72,28 +68,46 @@ export const BookingFormPage: React.FC = () => {
     );
   }
 
-  if (!user) return null;
-
-  const handleUseCurrentLocation = () => {
+  const handleUseCurrentLocation = async () => {
     setIsCapturingLocation(true);
     setLocationMessage('');
 
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-          setLocationMessage('Location coordinates captured and will be attached to this booking.');
-          setIsCapturingLocation(false);
-          toast.success('Current location captured');
-        },
-        () => {
+    try {
+      if (Capacitor.isNativePlatform()) {
+        const permission = await Geolocation.requestPermissions();
+        if (permission.location !== 'granted' && permission.coarseLocation !== 'granted') {
           setLocationMessage('Location permission was not granted. You can continue with manual address entry.');
           setIsCapturingLocation(false);
-        },
-        { timeout: 8000 }
-      );
-    } else {
-      setLocationMessage('Location capture is unavailable on this browser. Please enter your address manually.');
+          return;
+        }
+        const pos = await Geolocation.getCurrentPosition({ timeout: 8000 });
+        setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocationMessage('Location coordinates captured and will be attached to this booking.');
+        setIsCapturingLocation(false);
+        toast.success('Current location captured');
+        return;
+      }
+
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            setLocationMessage('Location coordinates captured and will be attached to this booking.');
+            setIsCapturingLocation(false);
+            toast.success('Current location captured');
+          },
+          () => {
+            setLocationMessage('Location permission was not granted. You can continue with manual address entry.');
+            setIsCapturingLocation(false);
+          },
+          { timeout: 8000 }
+        );
+      } else {
+        setLocationMessage('Location capture is unavailable on this browser. Please enter your address manually.');
+        setIsCapturingLocation(false);
+      }
+    } catch {
+      setLocationMessage('Could not access device location. You can continue with manual address entry.');
       setIsCapturingLocation(false);
     }
   };
@@ -128,7 +142,7 @@ export const BookingFormPage: React.FC = () => {
 
     const formattedAddress = `${houseNo.trim()}, ${street.trim()}`;
     const newBooking = bookingService.createBooking({
-      customerId: user.id,
+      customerId: user?.id || `guest-${Date.now()}`,
       customerName: customerName.trim(),
       customerPhone: customerPhone.trim(),
       serviceId: service.id,
