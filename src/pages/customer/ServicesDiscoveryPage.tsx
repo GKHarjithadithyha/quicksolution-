@@ -191,7 +191,7 @@ export const ServicesDiscoveryPage: React.FC = () => {
         )}
       </div>
 
-      {/* 4-Column Desktop Service Grid */}
+      {/* 2-Column Mobile App Grid / 4-Column Desktop Grid */}
       {filteredServices.length === 0 ? (
         <EmptyState
           title="No services match your search"
@@ -200,7 +200,7 @@ export const ServicesDiscoveryPage: React.FC = () => {
           onAction={handleResetFilters}
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
           {filteredServices.map((service) => {
             const cat = serviceService.getCategoryById(service.category_id);
             return (

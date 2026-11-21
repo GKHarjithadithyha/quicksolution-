@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Home,
   Compass,
@@ -10,13 +10,15 @@ import {
   X,
   Phone,
   Mail,
-  Clock
+  Clock,
+  ArrowLeft
 } from 'lucide-react';
 import { useAuth } from '../../features/auth/AuthContext';
-import { QuickSolutionLogo } from '../common/QuickSolutionLogo';
+import { QuickSolutionLogo, QuickSolutionMark } from '../common/QuickSolutionLogo';
 
 export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const locationRoute = useLocation();
+  const navigate = useNavigate();
   const { user, location, setLocation } = useAuth();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [locationInput, setLocationInput] = useState(location);
@@ -36,6 +38,29 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const isHomePage = locationRoute.pathname === '/';
 
+  // Native Android inner-screen title for mobile app bar
+  const getMobilePageTitle = (): string | null => {
+    const p = locationRoute.pathname;
+    if (p === '/') return null;
+    if (p === '/services') return 'Explore Services';
+    if (p.startsWith('/services/') || p.startsWith('/service/')) return 'Service Details';
+    if (p.startsWith('/book/')) return 'Book Service';
+    if (p.startsWith('/payment/')) return 'Payment';
+    if (p.startsWith('/booking/')) return 'Booking Details';
+    if (p === '/my-bookings') return 'My Bookings';
+    if (p === '/profile') return 'Profile';
+    if (p === '/login') return 'Sign In';
+    if (p === '/register') return 'Create Account';
+    return 'Quick Solution';
+  };
+
+  const mobileTitle = getMobilePageTitle();
+  const isTopLevelTab =
+    locationRoute.pathname === '/' ||
+    locationRoute.pathname === '/services' ||
+    locationRoute.pathname === '/my-bookings' ||
+    locationRoute.pathname === '/profile';
+
   const isNavActive = (path: string) => {
     if (path === '/') return locationRoute.pathname === '/';
     return locationRoute.pathname.startsWith(path);
@@ -48,22 +73,84 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   return (
-    <div className={`min-h-screen bg-[#F7F9F4] text-[#172B4D] flex flex-col ${hideMobileNav ? '' : 'pb-24 md:pb-0'}`}>
-      {/* Top Navigation Header */}
-      <header className="sticky top-0 z-40 glass-nav border-b border-[#DDE3E8] pt-safe">
-        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
-          {/* Left: Canonical Quick Solution Horizontal Logo + Location Selector */}
-          <div className="flex items-center gap-2.5 sm:gap-5 min-w-0">
+    <div className={`min-h-screen bg-[#F7F9F4] text-[#172B4D] flex flex-col ${hideMobileNav ? '' : 'pb-20 md:pb-0'}`}>
+      {/* Mobile Native Android App Bar (< md) */}
+      <header className="sticky top-0 z-40 bg-white border-b border-[#DDE3E8] pt-safe md:hidden">
+        <div className="px-3.5 h-14 flex items-center justify-between gap-2">
+          {isHomePage ? (
+            <>
+              {/* Left: Mark + Compact Two-Line Location Picker */}
+              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                <Link to="/" aria-label="Quick Solution Home" className="shrink-0">
+                  <QuickSolutionMark size={34} framed />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLocationInput(location);
+                    setIsLocationModalOpen(true);
+                  }}
+                  className="flex flex-col text-left min-w-0 py-1 active:opacity-75 cursor-pointer"
+                >
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#667085] leading-none">
+                    Quick Solution · Serving
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-sm font-bold text-[#172B4D] leading-tight mt-0.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#16794B] shrink-0" />
+                    <span className="truncate max-w-[175px]">{location}</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-[#667085] shrink-0" />
+                  </span>
+                </button>
+              </div>
+
+              {/* Right: Compact Account Avatar / Sign-In Button */}
+              {user ? (
+                <Link
+                  to="/profile"
+                  aria-label="Profile"
+                  className="w-10 h-10 rounded-full bg-[#172B4D] text-[#B9FF66] font-bold flex items-center justify-center text-sm shrink-0 active:scale-95 transition-transform"
+                >
+                  {user.full_name.charAt(0).toUpperCase()}
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="h-9 px-3.5 inline-flex items-center justify-center rounded-xl bg-[#EEF3EC] border border-[#DDE3E8] text-[#172B4D] text-xs font-bold shrink-0 active:opacity-80"
+                >
+                  Sign In
+                </Link>
+              )}
+            </>
+          ) : (
+            /* Native Android Inner-Screen App Bar (Back Arrow + Title) */
+            <div className="flex items-center gap-2 min-w-0 w-full">
+              {!isTopLevelTab && (
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  aria-label="Go back"
+                  className="w-10 h-10 -ml-1.5 rounded-full flex items-center justify-center text-[#172B4D] active:bg-[#EEF3EC] cursor-pointer shrink-0"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+              )}
+              <span className="font-heading text-base font-bold text-[#172B4D] truncate">
+                {mobileTitle}
+              </span>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Desktop Top Navigation Header (>= md) */}
+      <header className="hidden md:block sticky top-0 z-40 glass-nav border-b border-[#DDE3E8]">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-5 min-w-0">
             <Link to="/" className="shrink-0" aria-label="Quick Solution Home">
-              <div className="hidden sm:block">
-                <QuickSolutionLogo variant="horizontal" theme="light" showTagline size="sm" />
-              </div>
-              <div className="sm:hidden">
-                <QuickSolutionLogo variant="horizontal" theme="light" size="sm" />
-              </div>
+              <QuickSolutionLogo variant="horizontal" theme="light" showTagline size="sm" />
             </Link>
 
-            <div className="h-5 w-px bg-[#DDE3E8] hidden sm:block" />
+            <div className="h-5 w-px bg-[#DDE3E8]" />
 
             <button
               type="button"
@@ -71,19 +158,18 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                 setLocationInput(location);
                 setIsLocationModalOpen(true);
               }}
-              className="flex items-center gap-1.5 text-left min-w-0 min-h-[40px] px-2.5 py-1.5 rounded-xl bg-[#EEF3EC] hover:bg-[#E2EBE0] active:opacity-80 border border-[#DDE3E8] transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 text-left min-w-0 min-h-[40px] px-3 py-1.5 rounded-xl bg-[#EEF3EC] hover:bg-[#E2EBE0] border border-[#DDE3E8] transition-colors cursor-pointer"
               title="Change service location"
             >
               <MapPin className="w-4 h-4 text-[#172B4D] shrink-0" />
-              <span className="text-xs sm:text-sm font-semibold text-[#172B4D] truncate max-w-[96px] sm:max-w-[175px]">
+              <span className="text-sm font-semibold text-[#172B4D] truncate max-w-[175px]">
                 {location}
               </span>
               <ChevronDown className="w-3.5 h-3.5 text-[#475467] shrink-0" />
             </button>
           </div>
 
-          {/* Center: Desktop Navigation */}
-          <nav aria-label="Primary Navigation" className="hidden md:flex items-center gap-1">
+          <nav aria-label="Primary Navigation" className="flex items-center gap-1">
             {navItems.map((item) => {
               const active = isNavActive(item.path);
               return (
@@ -103,8 +189,7 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
             })}
           </nav>
 
-          {/* Right: Account / Sign In */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             {user ? (
               <Link
                 to="/profile"
@@ -124,13 +209,13 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="h-10 sm:h-11 px-3.5 sm:px-4 inline-flex items-center justify-center rounded-xl border border-[#172B4D] bg-white hover:bg-[#EEF3EC] text-[#172B4D] text-xs sm:text-sm font-semibold transition-colors"
+                  className="h-11 px-4 inline-flex items-center justify-center rounded-xl border border-[#172B4D] bg-white hover:bg-[#EEF3EC] text-[#172B4D] text-sm font-semibold transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/services"
-                  className="hidden sm:inline-flex h-11 px-4 items-center justify-center rounded-xl bg-[#B9FF66] hover:bg-[#A4ED45] active:bg-[#8AD42B] text-[#172B4D] text-sm font-bold transition-colors"
+                  className="h-11 px-4 inline-flex items-center justify-center rounded-xl bg-[#B9FF66] hover:bg-[#A4ED45] active:bg-[#8AD42B] text-[#172B4D] text-sm font-bold transition-colors"
                 >
                   Book a Service
                 </Link>
@@ -141,15 +226,14 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
       </header>
 
       {/* Main Content Area */}
-      <main className={isHomePage ? 'flex-1 w-full' : 'flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8'}>
+      <main className={isHomePage ? 'flex-1 w-full' : 'flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 py-4 sm:py-8'}>
         {children}
       </main>
 
-      {/* Midnight Navy Brand Footer (Desktop Web Only — hidden on Mobile/Android App) */}
+      {/* Desktop Footer (Hidden on Mobile/Android App) */}
       {!hideMobileNav && (
         <footer className="hidden md:block bg-[#172B4D] text-white mt-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
-            {/* Brand */}
+          <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
             <div className="space-y-3">
               <QuickSolutionLogo variant="horizontal" theme="dark" showTagline size="md" />
               <p className="text-white/75 leading-relaxed pt-1">
@@ -157,7 +241,6 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
               </p>
             </div>
 
-            {/* Quick Links */}
             <div className="space-y-3">
               <h3 className="font-heading font-semibold text-white">Quick Links</h3>
               <ul className="space-y-2 text-white/75">
@@ -168,9 +251,8 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
               </ul>
             </div>
 
-            {/* Popular Categories */}
             <div className="space-y-3">
-              <h3 className="font-heading font-semibold text-white">Categories</h3>
+              <h3 className="font-heading font-semibold text-white">Services</h3>
               <ul className="space-y-2 text-white/75">
                 <li><Link to="/services?category=cat-ac" className="hover:text-[#B9FF66] transition-colors">AC Services</Link></li>
                 <li><Link to="/services?category=cat-plumbing" className="hover:text-[#B9FF66] transition-colors">Plumbing</Link></li>
@@ -179,7 +261,6 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
               </ul>
             </div>
 
-            {/* Contact & Support */}
             <div className="space-y-3">
               <h3 className="font-heading font-semibold text-white">Contact & Support</h3>
               <ul className="space-y-2.5 text-white/80">
@@ -200,7 +281,7 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
           </div>
 
           <div className="border-t border-white/10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/65">
+            <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between text-xs text-white/65">
               <span>© {new Date().getFullYear()} Quick Solution. Every Need. One Quick Solution.</span>
               <div className="flex items-center gap-4">
                 <Link to="/profile" className="hover:text-[#B9FF66]">Terms & Conditions</Link>
@@ -211,11 +292,11 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
         </footer>
       )}
 
-      {/* Mobile Fixed Bottom Navigation (Safe Area Compliant) */}
+      {/* Mobile Material-3 Style Fixed Bottom Navigation Bar */}
       {!hideMobileNav && (
         <nav
           aria-label="Mobile Navigation"
-          className="fixed bottom-0 left-0 right-0 z-50 glass-nav border-t border-[#DDE3E8] pb-safe md:hidden shadow-lg"
+          className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-[#DDE3E8] pb-safe md:hidden shadow-[0_-4px_16px_rgba(23,43,77,0.06)]"
         >
           <div className="flex justify-around items-center h-16 px-1">
             {navItems.map((item) => {
@@ -225,12 +306,12 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                   key={item.path}
                   to={item.path}
                   aria-current={active ? 'page' : undefined}
-                  className={`flex flex-col items-center justify-center flex-1 min-h-[48px] gap-0.5 text-[11px] font-medium active:opacity-70 transition-colors ${
+                  className={`flex flex-col items-center justify-center flex-1 min-h-[48px] gap-0.5 text-[11px] font-medium select-none active:scale-95 transition-transform ${
                     active ? 'text-[#172B4D]' : 'text-[#667085]'
                   }`}
                 >
                   <div
-                    className={`px-3.5 py-1 rounded-full transition-colors ${
+                    className={`px-4 py-1 rounded-full transition-colors ${
                       active ? 'bg-[#B9FF66] text-[#172B4D]' : ''
                     }`}
                   >
@@ -244,7 +325,7 @@ export const CustomerLayout: React.FC<{ children: React.ReactNode }> = ({ childr
         </nav>
       )}
 
-      {/* Manual Location Selector Modal (Bottom Sheet on Mobile) */}
+      {/* Location Selector Bottom Sheet */}
       {isLocationModalOpen && (
         <div className="fixed inset-0 z-50 bg-[#172B4D]/50 flex items-end sm:items-center justify-center sm:p-4">
           <div className="bg-white border border-[#DDE3E8] rounded-t-3xl sm:rounded-2xl max-w-md w-full p-5 sm:p-6 pb-safe space-y-5 shadow-xl">
