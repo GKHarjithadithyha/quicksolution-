@@ -10,14 +10,14 @@ import { BookingButton } from '../../components/customer/BookingButton';
 import { BackgroundVideo } from '../../components/customer/BackgroundVideo';
 import { FAQSection } from '../../components/customer/FAQSection';
 import {
-  ChevronRight,
   IndianRupee,
   CalendarClock,
   ShieldCheck,
   BellRing,
   MapPin,
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  ChevronDown
 } from 'lucide-react';
 
 export const CustomerHomePage: React.FC = () => {
@@ -66,49 +66,77 @@ export const CustomerHomePage: React.FC = () => {
 
   return (
     <div className="w-full overflow-x-clip">
-      {/* MOBILE ANDROID APP TOP EXPERIENCE (< md): Search Bar + Compact Rounded Video Card */}
-      <div className="md:hidden px-3.5 pt-3 pb-2 space-y-3 bg-[#F7F9F4]">
-        {/* Sticky-feel App Search Bar */}
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          onSubmit={handleSearch}
-          placeholder="Search AC, plumbing, cleaning..."
-        />
-
-        {/* Compact Rounded Hero Video Card (Leaves Services Visible Above the Fold!) */}
-        <div className="relative h-[190px] rounded-2xl overflow-hidden border border-[#DDE3E8] shadow-sm">
+      {/* MOBILE ANDROID APP FULL-BLEED 9:16 VIDEO HERO (< md) */}
+      <section className="md:hidden relative w-full h-[82svh] min-h-[540px] max-h-[780px] overflow-hidden">
+        {/* 9:16 Vertical Background Video */}
+        <div className="absolute inset-0 z-0">
           <BackgroundVideo
-            src={HERO_BACKGROUND_VIDEOS.cleaning}
-            poster="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1000&q=80"
-            alt="Home service workers performing home services"
+            src={HERO_BACKGROUND_VIDEOS.mobileVertical}
+            poster="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80"
+            alt="Workers providing home services"
             autoPlayAlways
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#172B4D]/80 via-[#172B4D]/45 to-transparent" />
+          {/* Subtle readability gradient (no borders, pure open video feel) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#172B4D]/85 via-[#172B4D]/35 to-[#172B4D]/30" />
+        </div>
 
-          <div className="absolute inset-0 p-4 flex flex-col justify-between">
-            <div className="inline-flex items-center gap-1.5 self-start px-2.5 py-1 rounded-full bg-[#172B4D]/65 backdrop-blur-sm border border-white/20 text-[11px] font-semibold text-[#B9FF66]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B9FF66]" />
-              Available in {location}
-            </div>
+        {/* Overlay Content: Search at top, Borderless Left Brand Text, Scroll Animation at Bottom */}
+        <div className="relative z-10 h-full px-4 pt-4 pb-6 flex flex-col justify-between">
+          {/* Top Search Bar */}
+          <div>
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onSubmit={handleSearch}
+              placeholder="Search AC, plumbing, cleaning..."
+            />
+          </div>
 
-            <div className="space-y-2 max-w-[240px]">
-              <h1 className="text-xl font-bold text-white leading-tight">
-                Every Need.{' '}
+          {/* Left-Aligned Borderless Brand Typography + Scroll Animation */}
+          <div className="space-y-6">
+            <div className="max-w-[300px] text-left space-y-2.5">
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#B9FF66] tracking-wide uppercase">
+                <span className="w-2 h-2 rounded-full bg-[#B9FF66]" />
+                Quick Solution · {location}
+              </div>
+
+              <h1 className="font-heading text-[32px] font-extrabold text-white leading-[1.1] drop-shadow-sm">
+                Every Need.
+                <br />
                 <span className="text-[#B9FF66]">One Quick Solution.</span>
               </h1>
-              <Link
-                to="/services"
-                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-[#B9FF66] active:bg-[#8AD42B] text-[#172B4D] text-xs font-bold shadow-xs"
+
+              <p className="text-sm text-white/90 leading-relaxed">
+                Trusted home professionals at transparent fixed prices, right at your doorstep.
+              </p>
+
+              <div className="pt-1.5">
+                <Link
+                  to="/services"
+                  className="qs-btn-primary px-6 text-sm inline-flex items-center gap-2 shadow-md"
+                >
+                  <span>Explore Services</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Scroll-Down Animation Indicator */}
+            <div className="flex justify-start">
+              <a
+                href="#services-provided"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-white/90 active:opacity-75"
               >
-                Explore Services
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+                <span className="w-7 h-10 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center">
+                  <ChevronDown className="w-4 h-4 text-[#B9FF66] animate-bounce" />
+                </span>
+                <span className="tracking-wide">Scroll to explore services</span>
+              </a>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* DESKTOP HERO (>= md) */}
       <section className="hidden md:flex relative min-h-[580px] lg:min-h-[640px] items-center overflow-hidden border-b border-[#DDE3E8]">
@@ -191,27 +219,18 @@ export const CustomerHomePage: React.FC = () => {
       </section>
 
       {/* 2. Services Provided — Green & White Glassmorphism Theme */}
-      <section className="relative py-5 sm:py-14 qs-white-green-surface border-b border-[#16794B]/10 overflow-hidden">
+      <section id="services-provided" className="relative py-5 sm:py-14 qs-white-green-surface border-b border-[#16794B]/10 overflow-hidden">
         <div className="pointer-events-none absolute -top-10 -right-10 w-56 h-56 rounded-full bg-[#B9FF66]/25 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-12 -left-10 w-56 h-56 rounded-full bg-[#16794B]/12 blur-3xl" />
 
         <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 space-y-4 sm:space-y-6">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg sm:text-3xl font-bold text-[#172B4D]">
-                Services Provided
-              </h2>
-              <p className="text-xs sm:text-sm text-[#16794B] font-medium mt-0.5">
-                Transparent fixed-price home services
-              </p>
-            </div>
-            <Link
-              to="/services"
-              className="h-9 sm:h-11 px-3 sm:px-4 rounded-xl glass-card text-[#172B4D] hover:border-[#16794B]/50 text-xs sm:text-sm font-bold inline-flex items-center gap-1 shrink-0 active:opacity-80"
-            >
-              <span>View All</span>
-              <ChevronRight className="w-4 h-4 text-[#16794B]" />
-            </Link>
+          <div>
+            <h2 className="text-lg sm:text-3xl font-bold text-[#172B4D]">
+              Services Provided
+            </h2>
+            <p className="text-xs sm:text-sm text-[#16794B] font-medium mt-0.5">
+              Transparent fixed-price home services
+            </p>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
@@ -226,10 +245,21 @@ export const CustomerHomePage: React.FC = () => {
               );
             })}
           </div>
+
+          {/* Explore Services CTA underneath Services Provided */}
+          <div className="pt-1 sm:pt-2 flex justify-center">
+            <Link
+              to="/services"
+              className="qs-btn-primary w-full sm:w-auto px-8 text-sm sm:text-base inline-flex items-center justify-center gap-2 shadow-sm"
+            >
+              <span>Explore Services</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* 3. Why Choose Quick Solution — Green & White Glassmorphism */}
+      {/* 3. Why Choose Quick Solution — Green & White Glassmorphism + Horizontal Scroll Animation */}
       <section className="relative py-5 sm:py-14 qs-green-surface border-b border-[#16794B]/10 overflow-hidden">
         <div className="pointer-events-none absolute top-4 left-1/4 w-64 h-64 rounded-full bg-[#B9FF66]/25 blur-3xl" />
 
@@ -238,24 +268,43 @@ export const CustomerHomePage: React.FC = () => {
             Why Choose Quick Solution
           </h2>
 
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-1 -mx-3.5 px-3.5 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
+          {/* Mobile: Continuous Horizontal Scroll Animation */}
+          <div className="sm:hidden -mx-3.5 overflow-hidden py-1">
+            <div className="qs-marquee px-3.5">
+              {[...whyChooseItems, ...whyChooseItems].map((item, index) => (
+                <div
+                  key={`${item.title}-${index}`}
+                  className="shrink-0 w-[215px] glass-card rounded-2xl p-4 space-y-2"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-[#B9FF66] border border-[#16794B]/15 flex items-center justify-center shadow-2xs">
+                    {item.icon}
+                  </div>
+                  <h3 className="text-sm font-semibold text-[#172B4D]">{item.title}</h3>
+                  <p className="text-xs text-[#475467] leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tablet/Desktop: 4-Column Grid */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {whyChooseItems.map((item) => (
               <div
                 key={item.title}
-                className="snap-start shrink-0 w-[210px] sm:w-auto glass-card rounded-2xl p-4 sm:p-6 space-y-2 sm:space-y-3"
+                className="glass-card rounded-2xl p-6 space-y-3"
               >
-                <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#B9FF66] border border-[#16794B]/15 flex items-center justify-center shadow-2xs">
+                <div className="w-11 h-11 rounded-xl bg-[#B9FF66] border border-[#16794B]/15 flex items-center justify-center shadow-2xs">
                   {item.icon}
                 </div>
-                <h3 className="text-sm sm:text-base font-semibold text-[#172B4D]">{item.title}</h3>
-                <p className="text-xs sm:text-sm text-[#475467] leading-relaxed">{item.description}</p>
+                <h3 className="text-base font-semibold text-[#172B4D]">{item.title}</h3>
+                <p className="text-sm text-[#475467] leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. How It Works — Green & White Glassmorphism */}
+      {/* 4. How It Works — Green & White Glassmorphism + Horizontal Scroll Animation */}
       <section id="how-it-works" className="relative py-5 sm:py-14 qs-white-green-surface border-b border-[#16794B]/10 overflow-hidden">
         <div className="pointer-events-none absolute -bottom-10 right-1/4 w-64 h-64 rounded-full bg-[#16794B]/12 blur-3xl" />
 
@@ -264,24 +313,43 @@ export const CustomerHomePage: React.FC = () => {
             How It Works
           </h2>
 
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-1 -mx-3.5 px-3.5 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
+          {/* Mobile: Continuous Horizontal Scroll Animation */}
+          <div className="sm:hidden -mx-3.5 overflow-hidden py-1">
+            <div className="qs-marquee-slow px-3.5">
+              {[...howItWorksSteps, ...howItWorksSteps].map((item, index) => (
+                <div
+                  key={`${item.step}-${index}`}
+                  className="shrink-0 w-[205px] glass-card rounded-2xl p-4 space-y-2"
+                >
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#16794B] text-[#B9FF66] text-xs font-bold shadow-xs">
+                    {item.step}
+                  </span>
+                  <h3 className="text-sm font-semibold text-[#172B4D]">{item.title}</h3>
+                  <p className="text-xs text-[#475467] leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tablet/Desktop: 4-Column Grid */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {howItWorksSteps.map((item) => (
               <div
                 key={item.step}
-                className="snap-start shrink-0 w-[200px] sm:w-auto glass-card rounded-2xl p-4 sm:p-6 space-y-2 sm:space-y-3"
+                className="glass-card rounded-2xl p-6 space-y-3"
               >
-                <span className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#16794B] text-[#B9FF66] text-xs sm:text-sm font-bold shadow-xs">
+                <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#16794B] text-[#B9FF66] text-sm font-bold shadow-xs">
                   {item.step}
                 </span>
-                <h3 className="text-sm sm:text-base font-semibold text-[#172B4D]">{item.title}</h3>
-                <p className="text-xs sm:text-sm text-[#475467] leading-relaxed">{item.description}</p>
+                <h3 className="text-base font-semibold text-[#172B4D]">{item.title}</h3>
+                <p className="text-sm text-[#475467] leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 5. Customer Reviews — Green & White Glassmorphism */}
+      {/* 5. Customer Reviews — Green & White Glassmorphism + Horizontal Scroll Animation */}
       {allReviews.length > 0 && (
         <section className="relative py-5 sm:py-14 qs-green-surface border-b border-[#16794B]/10 overflow-hidden">
           <div className="pointer-events-none absolute -top-10 left-12 w-56 h-56 rounded-full bg-[#B9FF66]/25 blur-3xl" />
@@ -291,16 +359,41 @@ export const CustomerHomePage: React.FC = () => {
               Customer Reviews
             </h2>
 
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-1 -mx-3.5 px-3.5 no-scrollbar md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-5">
+            {/* Mobile: Continuous Horizontal Scroll Animation */}
+            <div className="md:hidden -mx-3.5 overflow-hidden py-1">
+              <div className="qs-marquee-slow px-3.5">
+                {[...allReviews, ...allReviews].map((review, index) => {
+                  const srv = serviceService.getServiceById(review.service_id);
+                  return (
+                    <div
+                      key={`${review.id}-${index}`}
+                      className="shrink-0 w-[265px] glass-card rounded-2xl p-4 space-y-2.5"
+                    >
+                      <RatingStars rating={review.rating} reviewCount={1} size="sm" showNewBadge={false} />
+                      <p className="text-xs text-[#172B4D] leading-relaxed">
+                        &ldquo;{review.comment}&rdquo;
+                      </p>
+                      <div className="pt-2 border-t border-[#16794B]/15 flex items-center justify-between text-xs text-[#475467]">
+                        <span className="font-semibold text-[#172B4D]">{review.customer_name}</span>
+                        {srv && <span className="truncate max-w-[130px] text-[#16794B] font-medium">{srv.name}</span>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Desktop: 3-Column Grid */}
+            <div className="hidden md:grid md:grid-cols-3 gap-5">
               {allReviews.map((review) => {
                 const srv = serviceService.getServiceById(review.service_id);
                 return (
                   <div
                     key={review.id}
-                    className="snap-start shrink-0 w-[270px] md:w-auto glass-card rounded-2xl p-4 sm:p-6 space-y-2.5"
+                    className="glass-card rounded-2xl p-6 space-y-2.5"
                   >
                     <RatingStars rating={review.rating} reviewCount={1} size="sm" showNewBadge={false} />
-                    <p className="text-xs sm:text-sm text-[#172B4D] leading-relaxed">
+                    <p className="text-sm text-[#172B4D] leading-relaxed">
                       &ldquo;{review.comment}&rdquo;
                     </p>
                     <div className="pt-2 border-t border-[#16794B]/15 flex items-center justify-between text-xs text-[#475467]">

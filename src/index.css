@@ -196,4 +196,36 @@
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.22);
   }
+
+  .qs-marquee {
+    display: flex;
+    width: max-content;
+    gap: 12px;
+    animation: qs-scroll-x 20s linear infinite;
+    will-change: transform;
+  }
+
+  .qs-marquee-slow {
+    display: flex;
+    width: max-content;
+    gap: 12px;
+    animation: qs-scroll-x 26s linear infinite;
+    will-change: transform;
+  }
+
+  .qs-marquee:hover,
+  .qs-marquee:active,
+  .qs-marquee-slow:hover,
+  .qs-marquee-slow:active {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes qs-scroll-x {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }

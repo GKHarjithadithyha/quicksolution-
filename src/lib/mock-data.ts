@@ -2,6 +2,7 @@ import { ServiceCategory, ServiceItem, Booking, UserProfile, ServiceReview } fro
 
 export const HERO_BACKGROUND_VIDEOS = {
   cleaning: '/videos/hero-services.mp4',
+  mobileVertical: '/videos/hero-mobile-9x16.mp4',
   homeCare: '/videos/hero-services.mp4',
   repair: '/videos/hero-services.mp4'
 };
